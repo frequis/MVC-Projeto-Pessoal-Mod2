@@ -12,7 +12,7 @@
 ## Sumário
 
 1. [Introdução](#c1)  
-3. [Modelos Database](#c2)  
+3. [Modelagem do banco de dados](#c2)  
 4. [Desenvolvimento da Aplicação Web](#c3)  
 5. [Referências](#c4)  
 
@@ -26,13 +26,64 @@ Esse sistema pode ser modificado para diferentes usos, mas nesse projeto o foco 
 
 ---
 
-## <a name="c2"></a>2. Modelos Database
+## <a name="c2"></a>2. Modelagem do banco de dados
 
-### 2.1. Modelagem do banco de dados  (Semana 3)
+### 2.1. Modelo Relacional  (Semana 3)
 
-*Posicione aqui os diagramas de modelos relacionais do seu banco de dados, apresentando todos os esquemas de tabelas e suas relações. Utilize texto para complementar suas explicações, se necessário.*
+# Diagrama do Banco de Dados
 
-*Posicione também o modelo físico com o Schema do BD (arquivo .sql)*
+Este diagrama mostra o relacionamento entre as entidades: turma, aluno, grupo, salas, reservas e a tabela associativa aluno_grupo.
+
+<div align="center">
+  <img src="../assets/Diagrama_final.jpeg" alt="Diagrama do Banco de Dados" width="100%">
+  <p><sub>Fonte: Material produzido pelo autor (2025)</sub></p>
+</div>
+
+# Modelo de Dados da Aplicação
+
+O esquema abaixo representa o modelo relacional do banco de dados em DBML:
+
+```dbml
+Table aluno { 
+  id integer [primary key]
+  nome varchar
+  id_turma varchar [not null, ref: > turma.id]
+}
+
+Table aluno_grupo {
+  id integer
+  id_aluno integer [not null, ref: > aluno.id]
+  id_grupo integer [not null, ref: > grupo.id]
+}
+
+Table grupo {
+  id integer [primary key]
+  nome varchar
+  quantidade integer
+}
+
+Table turma {
+  id integer [primary key]
+  nome varchar
+  ano_de_entrada integer
+}
+
+Table salas {
+  id integer [primary key]
+  capacidade integer
+  nome varchar
+}
+
+Table reservas {
+  id integer [primary key]
+  sala_id integer [not null, ref: > salas.id]
+  id_aluno integer [not null, ref: > aluno.id]
+  id_grupo integer [not null, ref: > grupo.id]
+  reservado timestamp
+  começo timestamp
+  fim timestamp
+}
+```
 
 ### 2.1.1 BD e Models (Semana 5)
 *Descreva aqui os Models implementados no sistema web*
@@ -47,10 +98,6 @@ Esse sistema pode ser modificado para diferentes usos, mas nesse projeto o foco 
 - **Controller**: A camada que recebe as requisições, processa as ações e atualiza o modelo e a visualização.
   
 *Adicione as setas e explicações sobre como os dados fluem entre o Model, Controller e View.*
-
-### 2.3. Wireframes (Semana 03)
-
-*Posicione aqui as imagens do wireframe construído para sua solução e, opcionalmente, o link para acesso (mantenha o link sempre público para visualização).*
 
 ### 2.4. Guia de estilos (Semana 05)
 
