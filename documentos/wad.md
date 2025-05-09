@@ -12,7 +12,7 @@
 ## Sumário
 
 1. [Introdução](#c1)  
-3. [Projeto Técnico da Aplicação Web](#c2)  
+3. [Modelos Database](#c2)  
 4. [Desenvolvimento da Aplicação Web](#c3)  
 5. [Referências](#c4)  
 
@@ -26,7 +26,7 @@ Esse sistema pode ser modificado para diferentes usos, mas nesse projeto o foco 
 
 ---
 
-## <a name="c2"></a>2. Projeto da Aplicação Web
+## <a name="c2"></a>2. Modelos Database
 
 ### 2.1. Modelagem do banco de dados  (Semana 3)
 
