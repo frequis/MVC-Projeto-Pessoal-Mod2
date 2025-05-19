@@ -15,6 +15,4 @@ Este projeto é um sistema de gerenciamento de reservas de salas, com foco em pr
 
 ## 📁 Estrutura de pastas
 
-<<<<<<< Updated upstream
 Será utilizado o padrão MVC, que é uma forma de organizar o código de uma aplicação dividindo-a em três camadas principais, cada uma com uma responsabilidade específica. O Model representa os dados e as regras de negócio da aplicação, sendo responsável por acessar e manipular informações no banco de dados. A View é a parte visual, responsável por exibir as informações ao usuário, seja em páginas HTML ou respostas JSON em APIs. Já o Controller atua como um intermediário entre a View e o Model: ele recebe as requisições do usuário, decide o que fazer com elas, interage com o Model quando necessário e retorna a resposta apropriada por meio da View. Essa separação torna o código mais organizado, reutilizável e fácil de manter.
-=======
