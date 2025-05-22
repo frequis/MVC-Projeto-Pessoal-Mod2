@@ -45,3 +45,4 @@ CREATE TABLE reservas (
   FOREIGN KEY (id_aluno) REFERENCES aluno(id),
   FOREIGN KEY (id_grupo) REFERENCES grupo(id)
 );
+

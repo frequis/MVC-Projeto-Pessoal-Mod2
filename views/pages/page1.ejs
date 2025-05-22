@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Page 1 - Turmas</title>
+</head>
+<body>
+  <h1>Lista de Turmas</h1>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Ano de Entrada</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% turmas.forEach(turma => { %>
+        <tr>
+          <td><%= turma.id %></td>
+          <td><%= turma.nome %></td>
+          <td><%= turma.ano_de_entrada %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</body>
+</html>
