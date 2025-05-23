@@ -3,11 +3,12 @@ const turmaModel = require('../models/turmaModel');
 const getAllTurmas = async (req, res) => {
   try {
     const turmas = await turmaModel.getAll();
-    res.status(200).json(turmas);
+    res.render('pages/page1', { turmas });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).send('Erro ao carregar turmas');
   }
 };
+
 
 const getTurmaById = async (req, res) => {
   try {

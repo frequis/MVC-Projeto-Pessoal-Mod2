@@ -14,13 +14,19 @@
       </tr>
     </thead>
     <tbody>
-      <% turmas.forEach(turma => { %>
+      <% if (turmas.length > 0) { %>
+        <% turmas.forEach(turma => { %>
+          <tr>
+            <td><%= turma.id %></td>
+            <td><%= turma.nome %></td>
+            <td><%= turma.ano_de_entrada %></td>
+          </tr>
+        <% }) %>
+      <% } else { %>
         <tr>
-          <td><%= turma.id %></td>
-          <td><%= turma.nome %></td>
-          <td><%= turma.ano_de_entrada %></td>
+          <td colspan="3">Nenhuma turma encontrada</td>
         </tr>
-      <% }) %>
+      <% } %>
     </tbody>
   </table>
 </body>

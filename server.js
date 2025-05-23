@@ -1,28 +1,20 @@
 const express = require('express');
 const app = express();
-const routes = require('./routes');
+const path = require('path');
+const routes = require('./routes/index');
 
-app.use('/api', routes);
-
+// Middleware para ler JSON e URL-encoded
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Configurar EJS
 app.set('view engine', 'ejs');
-app.set('views', './views');
+app.set('views', path.join(__dirname, 'views'));
 
-app.use('/api', routes);
+// Usar as rotas
+app.use('/', routes);
 
-// Rota para renderizar a página 1 com turmas
-const turmaModel = require('./models/turmaModel');
-
-app.get('/', async (req, res) => {
-  try {
-    const turmas = await turmaModel.getAll();
-    res.render('pages/page1', { turmas });
-  } catch (err) {
-    res.status(500).send('Erro ao carregar as turmas');
-  }
+// Iniciar servidor
+app.listen(3000, () => {
+  console.log('Servidor rodando em http://localhost:3000');
 });
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));

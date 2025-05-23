@@ -26,3 +26,4 @@ const runSQLScript = async () => {
 };
 
 runSQLScript();
+
