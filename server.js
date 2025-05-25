@@ -3,7 +3,6 @@ const app = express();
 const path = require('path');
 const routes = require('./routes/index');
 
-// Middleware para ler JSON e URL-encoded
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

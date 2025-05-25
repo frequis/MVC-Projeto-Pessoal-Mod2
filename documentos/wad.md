@@ -86,18 +86,14 @@ Table reservas {
 ```
 
 ### 2.1.1 BD e Models (Semana 5)
-*Descreva aqui os Models implementados no sistema web*
+O model Turma representa a entidade de turma no sistema, responsável por armazenar informações sobre as turmas cadastradas, como nome e ano de entrada. Ele faz a interface entre a aplicação e o banco de dados para todas as operações relacionadas às turmas.
 
 ### 2.2. Arquitetura (Semana 5)
 
-*Posicione aqui o diagrama de arquitetura da sua solução de aplicação web. Atualize sempre que necessário.*
-
-**Instruções para criação do diagrama de arquitetura**  
-- **Model**: A camada que lida com a lógica de negócios e interage com o banco de dados.
-- **View**: A camada responsável pela interface de usuário.
-- **Controller**: A camada que recebe as requisições, processa as ações e atualiza o modelo e a visualização.
-  
-*Adicione as setas e explicações sobre como os dados fluem entre o Model, Controller e View.*
+<div align="center">
+  <img src="../assets/MVC_diagram.png" alt="Diagrama MVC" width="100%">
+  <p><sub>Fonte: Material produzido pelo autor (2025)</sub></p>
+</div>
 
 ### 2.4. Guia de estilos (Semana 05)
 
