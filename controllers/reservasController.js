@@ -1,67 +1,60 @@
 const reservasModel = require('../models/reservasModel');
 
-const getAllReservas = async (req, res) => {
-  try {
-    const reservas = await reservasModel.getAll();
-    res.status(200).json(reservas);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+const getAllReservas = async () => {
+    try {
+        const reservas = await reservasModel.getAll();
+        return reservas;
+    } catch (err) {
+        console.error('Error getting reservas:', err);
+        return [];
+    }
 };
 
-const getReservaById = async (req, res) => {
-  try {
-    const reserva = await reservasModel.getById(req.params.id);
-    if (!reserva) return res.status(404).json({ error: 'Reserva não encontrada' });
-    res.status(200).json(reserva);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+const getReservaById = async (id) => {
+    try {
+        const reserva = await reservasModel.getById(id);
+        return reserva;
+    } catch (err) {
+        console.error('Error getting reserva:', err);
+        return null;
+    }
 };
 
 const createReserva = async (req, res) => {
-  try {
-    const { sala_id, id_aluno, id_grupo, reservado, começo, fim } = req.body;
-    const novaReserva = await reservasModel.create(sala_id, id_aluno, id_grupo, reservado, começo, fim);
-    res.status(201).json(novaReserva);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+    try {
+        const { sala_id, id_aluno, id_grupo, reservado, começo, fim } = req.body;
+        const reserva = await reservasModel.create(sala_id, id_aluno, id_grupo, reservado, começo, fim);
+        res.status(201).json(reserva);
+    } catch (err) {
+        res.status(500).json({ error: 'Error creating reserva' });
+    }
 };
 
 const updateReserva = async (req, res) => {
-  try {
-    const { sala_id, id_aluno, id_grupo, reservado, começo, fim } = req.body;
-    const reservaAtualizada = await reservasModel.update(
-      req.params.id,
-      sala_id,
-      id_aluno,
-      id_grupo,
-      reservado,
-      começo,
-      fim
-    );
-    if (!reservaAtualizada) return res.status(404).json({ error: 'Reserva não encontrada' });
-    res.status(200).json(reservaAtualizada);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+    try {
+        const { id } = req.params;
+        const { sala_id, id_aluno, id_grupo, reservado, começo, fim } = req.body;
+        const reserva = await reservasModel.update(id, sala_id, id_aluno, id_grupo, reservado, começo, fim);
+        res.json(reserva);
+    } catch (err) {
+        res.status(500).json({ error: 'Error updating reserva' });
+    }
 };
 
 const deleteReserva = async (req, res) => {
-  try {
-    const reservaDeletada = await reservasModel.remove(req.params.id);
-    if (!reservaDeletada) return res.status(404).json({ error: 'Reserva não encontrada' });
-    res.status(200).json(reservaDeletada);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+    try {
+        const { id } = req.params;
+        await reservasModel.remove(id);
+        res.status(204).send();
+    } catch (err) {
+        res.status(500).json({ error: 'Error deleting reserva' });
+    }
 };
 
 module.exports = {
-  getAllReservas,
-  getReservaById,
-  createReserva,
-  updateReserva,
-  deleteReserva
+    getAllReservas,
+    getReservaById,
+    createReserva,
+    updateReserva,
+    deleteReserva
 };

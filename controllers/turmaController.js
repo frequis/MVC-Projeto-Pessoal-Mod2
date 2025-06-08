@@ -1,12 +1,13 @@
 const turmaModel = require('../models/turmaModel');
 
 const getAllTurmas = async (req, res) => {
-  try {
-    const turmas = await turmaModel.getAll();
-    res.render('pages/page1', { turmas });
-  } catch (err) {
-    res.status(500).send('Erro ao carregar turmas');
-  }
+    try {
+        const turmas = await turmaModel.getAll();
+        return turmas;
+    } catch (err) {
+        console.error('Error getting turmas:', err);
+        return [];
+    }
 };
 
 

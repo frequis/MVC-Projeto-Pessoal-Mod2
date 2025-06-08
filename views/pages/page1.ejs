@@ -1,31 +1,222 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Page 1 - Turmas</title>
+  <title>Sistema de Reservas</title>
+  <link rel="stylesheet" type="text/css" href="/css/style.css">
 </head>
 <body>
-  <h1>Lista de Turmas</h1>
+  <h1>Sistema de Reservas - Visão Geral</h1>
+
+  <!-- Tabela de Turmas -->
+  <h2>
+    Lista de Turmas
+    <a href="/turmas/novo" class="add-button">Adicionar Turma</a>
+  </h2>
   <table border="1">
     <thead>
       <tr>
         <th>ID</th>
         <th>Nome</th>
         <th>Ano de Entrada</th>
+        <th>Ações</th>
       </tr>
     </thead>
     <tbody>
-      <% if (turmas.length > 0) { %>
+      <% if (turmas && turmas.length > 0) { %>
         <% turmas.forEach(turma => { %>
           <tr>
             <td><%= turma.id %></td>
             <td><%= turma.nome %></td>
             <td><%= turma.ano_de_entrada %></td>
+            <td>
+              <div class="action-buttons">
+                <button onclick="location.href='/turmas/editar/<%= turma.id %>'">Editar</button>
+                <button class="delete-button" onclick="location.href='/turmas/excluir/<%= turma.id %>'">Excluir</button>
+              </div>
+            </td>
           </tr>
         <% }) %>
       <% } else { %>
-        <tr>
-          <td colspan="3">Nenhuma turma encontrada</td>
-        </tr>
+        <tr><td colspan="4">Nenhuma turma encontrada</td></tr>
+      <% } %>
+    </tbody>
+  </table>
+
+  <!-- Tabela de Alunos -->
+  <h2>
+    Lista de Alunos
+    <a href="/alunos/novo" class="add-button">Adicionar Aluno</a>
+  </h2>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Turma</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (alunos && alunos.length > 0) { %>
+        <% alunos.forEach(aluno => { %>
+          <tr>
+            <td><%= aluno.id %></td>
+            <td><%= aluno.nome %></td>
+            <td><%= aluno.id_turma %></td>
+            <td>
+              <div class="action-buttons">
+                <button onclick="location.href='/alunos/editar/<%= aluno.id %>'">Editar</button>
+                <button class="delete-button" onclick="location.href='/alunos/excluir/<%= aluno.id %>'">Excluir</button>
+              </div>
+            </td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr><td colspan="4">Nenhum aluno encontrado</td></tr>
+      <% } %>
+    </tbody>
+  </table>
+
+  <!-- Tabela de Grupos -->
+  <h2>
+    Lista de Grupos
+    <a href="/grupos/novo" class="add-button">Adicionar Grupo</a>
+  </h2>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Quantidade</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (grupos && grupos.length > 0) { %>
+        <% grupos.forEach(grupo => { %>
+          <tr>
+            <td><%= grupo.id %></td>
+            <td><%= grupo.nome %></td>
+            <td><%= grupo.quantidade %></td>
+            <td>
+              <div class="action-buttons">
+                <button onclick="location.href='/grupos/editar/<%= grupo.id %>'">Editar</button>
+                <button class="delete-button" onclick="location.href='/grupos/excluir/<%= grupo.id %>'">Excluir</button>
+              </div>
+            </td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr><td colspan="4">Nenhum grupo encontrado</td></tr>
+      <% } %>
+    </tbody>
+  </table>
+
+  <!-- Tabela de Salas -->
+  <h2>
+    Lista de Salas
+    <a href="/salas/novo" class="add-button">Adicionar Sala</a>
+  </h2>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Capacidade</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (salas && salas.length > 0) { %>
+        <% salas.forEach(sala => { %>
+          <tr>
+            <td><%= sala.id %></td>
+            <td><%= sala.nome %></td>
+            <td><%= sala.capacidade %></td>
+            <td>
+              <div class="action-buttons">
+                <button onclick="location.href='/salas/editar/<%= sala.id %>'">Editar</button>
+                <button class="delete-button" onclick="location.href='/salas/excluir/<%= sala.id %>'">Excluir</button>
+              </div>
+            </td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr><td colspan="4">Nenhuma sala encontrada</td></tr>
+      <% } %>
+    </tbody>
+  </table>
+
+  <!-- Tabela de Reservas -->
+  <h2>
+    Lista de Reservas
+    <a href="/reservas/novo" class="add-button">Adicionar Reserva</a>
+  </h2>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Sala</th>
+        <th>Grupo</th>
+        <th>Início</th>
+        <th>Fim</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (reservas && reservas.length > 0) { %>
+        <% reservas.forEach(reserva => { %>
+          <tr>
+            <td><%= reserva.id %></td>
+            <td><%= reserva.sala_id %></td>
+            <td><%= reserva.id_grupo %></td>
+            <td><%= reserva.começo %></td>
+            <td><%= reserva.fim %></td>
+            <td>
+              <div class="action-buttons">
+                <button onclick="location.href='/reservas/editar/<%= reserva.id %>'">Editar</button>
+                <button class="delete-button" onclick="location.href='/reservas/excluir/<%= reserva.id %>'">Excluir</button>
+              </div>
+            </td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr><td colspan="6">Nenhuma reserva encontrada</td></tr>
+      <% } %>
+    </tbody>
+  </table>
+
+  <!-- Tabela de Aluno-Grupo -->
+  <h2>
+    Alunos por Grupo
+    <a href="/aluno-grupo/novo" class="add-button">Adicionar Relação</a>
+  </h2>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Aluno</th>
+        <th>Grupo</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (alunoGrupos && alunoGrupos.length > 0) { %>
+        <% alunoGrupos.forEach(ag => { %>
+          <tr>
+            <td><%= ag.id %></td>
+            <td><%= ag.id_aluno %></td>
+            <td><%= ag.id_grupo %></td>
+            <td>
+              <div class="action-buttons">
+                <button onclick="location.href='/aluno-grupo/editar/<%= ag.id %>'">Editar</button>
+                <button class="delete-button" onclick="location.href='/aluno-grupo/excluir/<%= ag.id %>'">Excluir</button>
+              </div>
+            </td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr><td colspan="4">Nenhuma relação aluno-grupo encontrada</td></tr>
       <% } %>
     </tbody>
   </table>

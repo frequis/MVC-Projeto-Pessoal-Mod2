@@ -5,6 +5,7 @@ const routes = require('./routes/index');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
 
 // Configurar EJS
 app.set('view engine', 'ejs');

@@ -1,12 +1,13 @@
 const alunoModel = require('../models/alunoModel');
 
-const getAllAlunos = async (req, res) => {
-  try {
-    const alunos = await alunoModel.getAll();
-    res.status(200).json(alunos);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+const getAllAlunos = async () => {
+    try {
+        const alunos = await alunoModel.getAll();
+        return alunos;
+    } catch (err) {
+        console.error('Error getting alunos:', err);
+        return [];
+    }
 };
 
 const getAlunoById = async (req, res) => {

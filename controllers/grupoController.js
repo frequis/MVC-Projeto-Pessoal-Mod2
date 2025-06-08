@@ -1,21 +1,22 @@
 const grupoModel = require('../models/grupoModel');
 
-const getAllGrupos = async (req, res) => {
+const getAllGrupos = async () => {
   try {
     const grupos = await grupoModel.getAll();
-    res.status(200).json(grupos);
+    return grupos;
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Error getting grupos:', err);
+    return [];
   }
 };
 
-const getGrupoById = async (req, res) => {
+const getGrupoById = async (id) => {
   try {
-    const grupo = await grupoModel.getById(req.params.id);
-    if (!grupo) return res.status(404).json({ error: 'Grupo não encontrado' });
-    res.status(200).json(grupo);
+    const grupo = await grupoModel.getById(id);
+    return grupo;
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Error getting grupo:', err);
+    return null;
   }
 };
 
