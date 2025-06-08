@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Editar Aluno</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <script src="/js/script.js" defer></script>
+</head>
+<body>
+    <h1>Editar Aluno</h1>
+    <form id="formAluno" onsubmit="event.preventDefault(); handleSubmit();">
+        <div>
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" value="<%= aluno.nome %>" required>
+        </div>
+        <div>
+            <label for="id_turma">Turma:</label>
+            <select id="id_turma" name="id_turma" required>
+                <% turmas.forEach(turma => { %>
+                    <option value="<%= turma.id %>" 
+                            <%= turma.id === aluno.id_turma ? 'selected' : '' %>>
+                        <%= turma.nome %>
+                    </option>
+                <% }); %>
+            </select>
+        </div>
+        <button type="submit">Atualizar</button>
+        <a href="/" class="button">Cancelar</a>
+    </form>
+
+    <script>
+        async function handleSubmit() {
+            const data = {
+                nome: document.getElementById('nome').value,
+                id_turma: document.getElementById('id_turma').value
+            };
+
+            try {
+                await alunoApi.editar('<%= aluno.id %>', data);
+                window.location.href = '/';
+            } catch (error) {
+                console.error('Erro:', error);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nova Turma</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <script src="/js/script.js" defer></script>
+</head>
+<body>
+    <h1>Adicionar Nova Turma</h1>
+    <form id="formTurma" onsubmit="event.preventDefault(); handleSubmit();">
+        <div>
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" required>
+        </div>
+        <div>
+            <label for="ano">Ano de Entrada:</label>
+            <input type="number" id="ano" name="ano" required>
+        </div>
+        <button type="submit">Salvar</button>
+        <a href="/" class="button">Cancelar</a>
+    </form>
+
+    <script>
+        async function handleSubmit() {
+            const data = {
+                nome: document.getElementById('nome').value,
+                ano_de_entrada: document.getElementById('ano').value
+            };
+            try {
+                await turmaApi.criar(data);
+                window.location.href = '/';
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao criar turma');
+            }
+        }
+    </script>
+</body>
+</html>

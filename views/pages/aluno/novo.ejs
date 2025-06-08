@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Novo Aluno</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <script src="/js/script.js" defer></script>
+</head>
+<body>
+    <h1>Adicionar Novo Aluno</h1>
+    <form id="formAluno" onsubmit="event.preventDefault(); handleSubmit();">
+        <div>
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" required>
+        </div>
+        <div>
+            <label for="turma">Turma:</label>
+            <select id="turma" name="turma" required>
+                <% turmas.forEach(turma => { %>
+                    <option value="<%= turma.id %>"><%= turma.nome %></option>
+                <% }); %>
+            </select>
+        </div>
+        <button type="submit">Salvar</button>
+        <a href="/" class="button">Cancelar</a>
+    </form>
+
+    <script>
+        async function handleSubmit() {
+            const data = {
+                nome: document.getElementById('nome').value,
+                turma_id: document.getElementById('turma').value
+            };
+            try {
+                await alunoApi.criar(data);
+                window.location.href = '/';
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao criar aluno');
+            }
+        }
+    </script>
+</body>
+</html>

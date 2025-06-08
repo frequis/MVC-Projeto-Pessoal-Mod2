@@ -3,59 +3,76 @@ const turmaModel = require('../models/turmaModel');
 const getAllTurmas = async (req, res) => {
     try {
         const turmas = await turmaModel.getAll();
-        return turmas;
+        if (!res) return turmas;
+        res.status(200).json(turmas);
     } catch (err) {
         console.error('Error getting turmas:', err);
-        return [];
+        if (!res) return [];
+        res.status(500).json({ error: err.message });
     }
 };
 
-
 const getTurmaById = async (req, res) => {
-  try {
-    const turma = await turmaModel.getById(req.params.id);
-    if (!turma) return res.status(404).json({ error: 'Turma não encontrada' });
-    res.status(200).json(turma);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+    try {
+        const id = req.params ? req.params.id : req;
+        const turma = await turmaModel.getById(id);
+        if (!res) return turma;
+        if (!turma) {
+            res.status(404).json({ message: 'Turma não encontrada' });
+            return;
+        }
+        res.status(200).json(turma);
+    } catch (err) {
+        console.error('Error getting turma:', err);
+        if (!res) return null;
+        res.status(500).json({ error: err.message });
+    }
 };
 
 const createTurma = async (req, res) => {
-  try {
-    const { nome, ano_de_entrada } = req.body;
-    const novaTurma = await turmaModel.create(nome, ano_de_entrada);
-    res.status(201).json(novaTurma);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+    try {
+        const { nome, ano_de_entrada } = req.body;
+        const turma = await turmaModel.create(nome, ano_de_entrada);
+        res.status(201).json(turma);
+    } catch (err) {
+        console.error('Error creating turma:', err);
+        res.status(500).json({ error: err.message });
+    }
 };
 
 const updateTurma = async (req, res) => {
-  try {
-    const { nome, ano_de_entrada } = req.body;
-    const turmaAtualizada = await turmaModel.update(req.params.id, nome, ano_de_entrada);
-    if (!turmaAtualizada) return res.status(404).json({ error: 'Turma não encontrada' });
-    res.status(200).json(turmaAtualizada);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+    try {
+        const { nome, ano_de_entrada } = req.body;
+        const turma = await turmaModel.update(req.params.id, nome, ano_de_entrada);
+        if (!turma) {
+            res.status(404).json({ message: 'Turma não encontrada' });
+            return;
+        }
+        res.status(200).json(turma);
+    } catch (err) {
+        console.error('Error updating turma:', err);
+        res.status(500).json({ error: err.message });
+    }
 };
 
 const deleteTurma = async (req, res) => {
-  try {
-    const turmaDeletada = await turmaModel.remove(req.params.id);
-    if (!turmaDeletada) return res.status(404).json({ error: 'Turma não encontrada' });
-    res.status(200).json(turmaDeletada);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+    try {
+        const result = await turmaModel.remove(req.params.id);
+        if (!result) {
+            res.status(404).json({ message: 'Turma não encontrada' });
+            return;
+        }
+        res.status(204).send();
+    } catch (err) {
+        console.error('Error deleting turma:', err);
+        res.status(500).json({ error: err.message });
+    }
 };
 
 module.exports = {
-  getAllTurmas,
-  getTurmaById,
-  createTurma,
-  updateTurma,
-  deleteTurma,
+    getAllTurmas,
+    getTurmaById,
+    createTurma,
+    updateTurma,
+    deleteTurma,
 };

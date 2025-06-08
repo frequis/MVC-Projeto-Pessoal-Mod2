@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nova Reserva</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <script src="/js/script.js" defer></script>
+</head>
+<body>
+    <h1>Adicionar Nova Reserva</h1>
+    <form id="formReserva" onsubmit="event.preventDefault(); handleSubmit();">
+        <div>
+            <label for="sala">Sala:</label>
+            <select id="sala" name="sala" required>
+                <% salas.forEach(sala => { %>
+                    <option value="<%= sala.id %>"><%= sala.nome %> (Cap: <%= sala.capacidade %>)</option>
+                <% }); %>
+            </select>
+        </div>
+        <div>
+            <label for="grupo">Grupo:</label>
+            <select id="grupo" name="grupo" required>
+                <% grupos.forEach(grupo => { %>
+                    <option value="<%= grupo.id %>"><%= grupo.nome %></option>
+                <% }); %>
+            </select>
+        </div>
+        <div>
+            <label for="inicio">Início:</label>
+            <input type="datetime-local" id="inicio" name="inicio" required>
+        </div>
+        <div>
+            <label for="fim">Fim:</label>
+            <input type="datetime-local" id="fim" name="fim" required>
+        </div>
+        <button type="submit">Salvar</button>
+        <a href="/" class="button">Cancelar</a>
+    </form>
+
+    <script>
+        async function handleSubmit() {
+            const data = {
+                sala_id: document.getElementById('sala').value,
+                grupo_id: document.getElementById('grupo').value,
+                inicio: document.getElementById('inicio').value,
+                fim: document.getElementById('fim').value
+            };
+            try {
+                await reservaApi.criar(data);
+                window.location.href = '/';
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao criar reserva');
+            }
+        }
+    </script>
+</body>
+</html>

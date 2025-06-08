@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Novo Grupo</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <script src="/js/script.js" defer></script>
+</head>
+<body>
+    <h1>Adicionar Novo Grupo</h1>
+    <form id="formGrupo" onsubmit="event.preventDefault(); handleSubmit();">
+        <div>
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" required>
+        </div>
+        <div>
+            <label for="quantidade">Quantidade de Membros:</label>
+            <input type="number" id="quantidade" name="quantidade" required min="1">
+        </div>
+        <button type="submit">Salvar</button>
+        <a href="/" class="button">Cancelar</a>
+    </form>
+
+    <script>
+        async function handleSubmit() {
+            const data = {
+                nome: document.getElementById('nome').value,
+                quantidade: document.getElementById('quantidade').value
+            };
+            try {
+                await grupoApi.criar(data);
+                window.location.href = '/';
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao criar grupo');
+            }
+        }
+    </script>
+</body>
+</html>

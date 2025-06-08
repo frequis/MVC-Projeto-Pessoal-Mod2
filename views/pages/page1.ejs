@@ -3,6 +3,7 @@
 <head>
   <title>Sistema de Reservas</title>
   <link rel="stylesheet" type="text/css" href="/css/style.css">
+  <script src="/js/script.js" defer></script>
 </head>
 <body>
   <h1>Sistema de Reservas - Visão Geral</h1>
@@ -31,7 +32,7 @@
             <td>
               <div class="action-buttons">
                 <button onclick="location.href='/turmas/editar/<%= turma.id %>'">Editar</button>
-                <button class="delete-button" onclick="location.href='/turmas/excluir/<%= turma.id %>'">Excluir</button>
+                <button class="delete-button" onclick="turmaApi.excluir('<%= turma.id %>')">Excluir</button>
               </div>
             </td>
           </tr>
@@ -66,7 +67,7 @@
             <td>
               <div class="action-buttons">
                 <button onclick="location.href='/alunos/editar/<%= aluno.id %>'">Editar</button>
-                <button class="delete-button" onclick="location.href='/alunos/excluir/<%= aluno.id %>'">Excluir</button>
+                <button class="delete-button" onclick="alunoApi.excluir('<%= aluno.id %>')">Excluir</button>
               </div>
             </td>
           </tr>
@@ -101,7 +102,7 @@
             <td>
               <div class="action-buttons">
                 <button onclick="location.href='/grupos/editar/<%= grupo.id %>'">Editar</button>
-                <button class="delete-button" onclick="location.href='/grupos/excluir/<%= grupo.id %>'">Excluir</button>
+                <button class="delete-button" onclick="grupoApi.excluir('<%= grupo.id %>')">Excluir</button>
               </div>
             </td>
           </tr>
@@ -136,7 +137,7 @@
             <td>
               <div class="action-buttons">
                 <button onclick="location.href='/salas/editar/<%= sala.id %>'">Editar</button>
-                <button class="delete-button" onclick="location.href='/salas/excluir/<%= sala.id %>'">Excluir</button>
+                <button class="delete-button" onclick="salaApi.excluir('<%= sala.id %>')">Excluir</button>
               </div>
             </td>
           </tr>
@@ -175,7 +176,7 @@
             <td>
               <div class="action-buttons">
                 <button onclick="location.href='/reservas/editar/<%= reserva.id %>'">Editar</button>
-                <button class="delete-button" onclick="location.href='/reservas/excluir/<%= reserva.id %>'">Excluir</button>
+                <button class="delete-button" onclick="reservaApi.excluir('<%= reserva.id %>')">Excluir</button>
               </div>
             </td>
           </tr>
@@ -210,7 +211,7 @@
             <td>
               <div class="action-buttons">
                 <button onclick="location.href='/aluno-grupo/editar/<%= ag.id %>'">Editar</button>
-                <button class="delete-button" onclick="location.href='/aluno-grupo/excluir/<%= ag.id %>'">Excluir</button>
+                <button class="delete-button" onclick="alunoGrupoApi.excluir('<%= ag.id %>')">Excluir</button>
               </div>
             </td>
           </tr>

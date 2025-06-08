@@ -8,7 +8,7 @@ const salasController = require('../controllers/salasController');
 const reservasController = require('../controllers/reservasController');
 const alunoGrupoController = require('../controllers/aluno_grupoController');
 
-// Rota principal que renderiza page1.ejs
+// Rota principal
 router.get('/', async (req, res) => {
     try {
         const turmas = await turmaController.getAllTurmas();
@@ -27,161 +27,216 @@ router.get('/', async (req, res) => {
             alunoGrupos
         });
     } catch (error) {
-        console.error('Error:', error);
-        res.status(500).send('Internal Server Error');
+        console.error('Erro ao carregar dados:', error);
+        res.status(500).render('error', { error: 'Erro ao carregar dados' });
     }
 });
 
 // Rotas para Turmas
-router.get('/turmas', turmaController.getAllTurmas);
-router.get('/turmas/:id', turmaController.getTurmaById);
-router.post('/turmas', turmaController.createTurma);
-router.put('/turmas/:id', turmaController.updateTurma);
-router.delete('/turmas/:id', turmaController.deleteTurma);
 router.get('/turmas/novo', (req, res) => {
-    res.render('pages/turma/novo');
+    try {
+        res.render('pages/turma/novo');
+    } catch (error) {
+        console.error('Erro ao carregar formulário:', error);
+        res.status(500).render('error', { error: 'Erro ao carregar formulário' });
+    }
 });
 router.get('/turmas/editar/:id', async (req, res) => {
     try {
         const turma = await turmaController.getTurmaById(req.params.id);
         res.render('pages/turma/editar', { turma });
     } catch (error) {
-        res.status(500).send('Error loading turma');
+        console.error('Erro ao carregar turma:', error);
+        res.status(500).render('error', { error: 'Erro ao carregar turma' });
     }
 });
-router.get('/turmas/excluir/:id', async (req, res) => {
+router.get('/turmas/:id', turmaController.getTurmaById);
+router.get('/turmas', turmaController.getAllTurmas);
+router.post('/turmas', async (req, res) => {
+    try {
+        const result = await turmaController.createTurma(req.body);
+        res.status(201).json(result);
+    } catch (error) {
+        console.error('Erro ao criar turma:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+router.put('/turmas/:id', async (req, res) => {
+    try {
+        const result = await turmaController.updateTurma(req.params.id, req.body);
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Erro ao atualizar turma:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+router.delete('/turmas/:id', async (req, res) => {
     try {
         await turmaController.deleteTurma(req.params.id);
-        res.redirect('/');
+        res.status(204).send();
     } catch (error) {
-        res.status(500).send('Error deleting turma');
+        console.error('Erro ao deletar turma:', error);
+        res.status(500).json({ error: error.message });
     }
 });
 
 // Rotas para Alunos
-router.get('/alunos', alunoController.getAllAlunos);
-router.get('/alunos/:id', alunoController.getAlunoById);
-router.post('/alunos', alunoController.createAluno);
-router.put('/alunos/:id', alunoController.updateAluno);
-router.delete('/alunos/:id', alunoController.deleteAluno);
-router.get('/alunos/novo', (req, res) => {
-    res.render('pages/aluno/novo');
+router.get('/alunos/novo', async (req, res) => {
+    try {
+        const turmas = await turmaController.getAllTurmas();
+        res.render('pages/aluno/novo', { turmas });
+    } catch (error) {
+        console.error('Erro ao carregar formulário:', error);
+        res.status(500).render('error', { error: 'Erro ao carregar formulário' });
+    }
 });
 router.get('/alunos/editar/:id', async (req, res) => {
     try {
         const aluno = await alunoController.getAlunoById(req.params.id);
-        res.render('pages/aluno/editar', { aluno });
+        const turmas = await turmaController.getAllTurmas();
+        res.render('pages/aluno/editar', { aluno, turmas });
     } catch (error) {
-        res.status(500).send('Error loading aluno');
+        console.error('Erro ao carregar aluno:', error);
+        res.status(500).render('error', { error: 'Erro ao carregar aluno' });
     }
 });
-router.get('/alunos/excluir/:id', async (req, res) => {
+router.get('/alunos/:id', alunoController.getAlunoById);
+router.get('/alunos', alunoController.getAllAlunos);
+router.post('/alunos', async (req, res) => {
+    try {
+        const result = await alunoController.createAluno(req.body);
+        res.status(201).json(result);
+    } catch (error) {
+        console.error('Erro ao criar aluno:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+router.put('/alunos/:id', async (req, res) => {
+    try {
+        const result = await alunoController.updateAluno(req.params.id, req.body);
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Erro ao atualizar aluno:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+router.delete('/alunos/:id', async (req, res) => {
     try {
         await alunoController.deleteAluno(req.params.id);
-        res.redirect('/');
+        res.status(204).send();
     } catch (error) {
-        res.status(500).send('Error deleting aluno');
+        console.error('Erro ao deletar aluno:', error);
+        res.status(500).json({ error: error.message });
     }
 });
 
 // Rotas para Grupos
-router.get('/grupos', grupoController.getAllGrupos);
-router.get('/grupos/:id', grupoController.getGrupoById);
-router.post('/grupos', grupoController.createGrupo);
-router.put('/grupos/:id', grupoController.updateGrupo);
-router.delete('/grupos/:id', grupoController.deleteGrupo);
 router.get('/grupos/novo', (req, res) => {
-    res.render('pages/grupo/novo');
+    try {
+        res.render('pages/grupo/novo');
+    } catch (error) {
+        console.error('Erro ao carregar formulário:', error);
+        res.status(500).render('error', { error: 'Erro ao carregar formulário' });
+    }
 });
 router.get('/grupos/editar/:id', async (req, res) => {
     try {
         const grupo = await grupoController.getGrupoById(req.params.id);
         res.render('pages/grupo/editar', { grupo });
     } catch (error) {
-        res.status(500).send('Error loading grupo');
+        console.error('Erro ao carregar grupo:', error);
+        res.status(500).render('error', { error: 'Erro ao carregar grupo' });
     }
 });
-router.get('/grupos/excluir/:id', async (req, res) => {
+router.get('/grupos/:id', grupoController.getGrupoById);
+router.get('/grupos', grupoController.getAllGrupos);
+router.post('/grupos', async (req, res) => {
     try {
-        await grupoController.deleteGrupo(req.params.id);
-        res.redirect('/');
+        const result = await grupoController.createGrupo(req.body);
+        res.status(201).json(result);
     } catch (error) {
-        res.status(500).send('Error deleting grupo');
+        console.error('Erro ao criar grupo:', error);
+        res.status(500).json({ error: error.message });
     }
 });
+router.put('/grupos/:id', grupoController.updateGrupo);
+router.delete('/grupos/:id', grupoController.deleteGrupo);
 
 // Rotas para Salas
-router.get('/salas', salasController.getAllSalas);
+router.get('/salas/novo', (req, res) => res.render('pages/sala/novo'));
+router.get('/salas/editar/:id', async (req, res) => {
+    const sala = await salasController.getSalaById(req.params.id);
+    res.render('pages/sala/editar', { sala });
+});
 router.get('/salas/:id', salasController.getSalaById);
-router.post('/salas', salasController.createSala);
+router.get('/salas', salasController.getAllSalas);
+router.post('/salas', async (req, res) => {
+    try {
+        const result = await salasController.createSala(req.body);
+        res.status(201).json(result);
+    } catch (error) {
+        console.error('Erro ao criar sala:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
 router.put('/salas/:id', salasController.updateSala);
 router.delete('/salas/:id', salasController.deleteSala);
-router.get('/salas/novo', (req, res) => {
-    res.render('pages/sala/novo');
-});
-router.get('/salas/editar/:id', async (req, res) => {
-    try {
-        const sala = await salasController.getSalaById(req.params.id);
-        res.render('pages/sala/editar', { sala });
-    } catch (error) {
-        res.status(500).send('Error loading sala');
-    }
-});
-router.get('/salas/excluir/:id', async (req, res) => {
-    try {
-        await salasController.deleteSala(req.params.id);
-        res.redirect('/');
-    } catch (error) {
-        res.status(500).send('Error deleting sala');
-    }
-});
 
 // Rotas para Reservas
-router.get('/reservas', reservasController.getAllReservas);
-router.get('/reservas/novo', (req, res) => {
-    res.render('pages/reserva/novo');
+router.get('/reservas/novo', async (req, res) => {
+    try {
+        const salas = await salasController.getAllSalas();
+        const grupos = await grupoController.getAllGrupos();
+        res.render('pages/reserva/novo', { salas, grupos });
+    } catch (error) {
+        console.error('Erro ao carregar formulário:', error);
+        res.status(500).render('error', { error: 'Erro ao carregar formulário' });
+    }
 });
-
 router.get('/reservas/editar/:id', async (req, res) => {
+    const reserva = await reservasController.getReservaById(req.params.id);
+    const salas = await salasController.getAllSalas();
+    const grupos = await grupoController.getAllGrupos();
+    res.render('pages/reserva/editar', { reserva, salas, grupos });
+});
+router.get('/reservas/:id', reservasController.getReservaById);
+router.get('/reservas', reservasController.getAllReservas);
+router.post('/reservas', async (req, res) => {
     try {
-        const reserva = await reservasController.getReservaById(req.params.id);
-        res.render('pages/reserva/editar', { reserva });
+        const result = await reservasController.createReserva(req.body);
+        res.status(201).json(result);
     } catch (error) {
-        res.status(500).send('Error loading reserva');
+        console.error('Erro ao criar reserva:', error);
+        res.status(500).json({ error: error.message });
     }
 });
-
-router.get('/reservas/excluir/:id', async (req, res) => {
-    try {
-        await reservasController.deleteReserva(req.params.id);
-        res.redirect('/');
-    } catch (error) {
-        res.status(500).send('Error deleting reserva');
-    }
-});
+router.put('/reservas/:id', reservasController.updateReserva);
+router.delete('/reservas/:id', reservasController.deleteReserva);
 
 // Rotas para Aluno-Grupo
-router.get('/aluno-grupos', alunoGrupoController.getAllAlunoGrupos);
-router.get('/aluno-grupos/novo', (req, res) => {
-    res.render('pages/aluno-grupo/novo');
+router.get('/aluno-grupo/novo', async (req, res) => {
+    const alunos = await alunoController.getAllAlunos();
+    const grupos = await grupoController.getAllGrupos();
+    res.render('pages/aluno-grupo/novo', { alunos, grupos });
 });
-
-router.get('/aluno-grupos/editar/:id', async (req, res) => {
+router.get('/aluno-grupo/editar/:id', async (req, res) => {
+    const alunoGrupo = await alunoGrupoController.getAlunoGrupoById(req.params.id);
+    const alunos = await alunoController.getAllAlunos();
+    const grupos = await grupoController.getAllGrupos();
+    res.render('pages/aluno-grupo/editar', { alunoGrupo, alunos, grupos });
+});
+router.get('/aluno-grupo/:id', alunoGrupoController.getAlunoGrupoById);
+router.get('/aluno-grupo', alunoGrupoController.getAllAlunoGrupos);
+router.post('/aluno-grupo', async (req, res) => {
     try {
-        const alunoGrupo = await alunoGrupoController.getAlunoGrupoById(req.params.id);
-        res.render('pages/aluno-grupo/editar', { alunoGrupo });
+        const result = await alunoGrupoController.createAlunoGrupo(req.body);
+        res.status(201).json(result);
     } catch (error) {
-        res.status(500).send('Error loading aluno-grupo');
+        console.error('Erro ao criar relação aluno-grupo:', error);
+        res.status(500).json({ error: error.message });
     }
 });
-
-router.get('/aluno-grupos/excluir/:id', async (req, res) => {
-    try {
-        await alunoGrupoController.deleteAlunoGrupo(req.params.id);
-        res.redirect('/');
-    } catch (error) {
-        res.status(500).send('Error deleting aluno-grupo');
-    }
-});
+router.put('/aluno-grupo/:id', alunoGrupoController.updateAlunoGrupo);
+router.delete('/aluno-grupo/:id', alunoGrupoController.deleteAlunoGrupo);
 
 module.exports = router;

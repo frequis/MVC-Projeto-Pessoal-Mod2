@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Editar Relação Aluno-Grupo</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <script src="/js/script.js" defer></script>
+</head>
+<body>
+    <h1>Editar Relação Aluno-Grupo</h1>
+    <form id="formAlunoGrupo" onsubmit="event.preventDefault(); handleSubmit();">
+        <div>
+            <label for="aluno">Aluno:</label>
+            <select id="aluno" name="aluno" required>
+                <% alunos.forEach(aluno => { %>
+                    <option value="<%= aluno.id %>" 
+                            <%= aluno.id === alunoGrupo.id_aluno ? 'selected' : '' %>>
+                        <%= aluno.nome %>
+                    </option>
+                <% }); %>
+            </select>
+        </div>
+        <div>
+            <label for="grupo">Grupo:</label>
+            <select id="grupo" name="grupo" required>
+                <% grupos.forEach(grupo => { %>
+                    <option value="<%= grupo.id %>"
+                            <%= grupo.id === alunoGrupo.id_grupo ? 'selected' : '' %>>
+                        <%= grupo.nome %>
+                    </option>
+                <% }); %>
+            </select>
+        </div>
+        <button type="submit">Atualizar</button>
+        <a href="/" class="button">Cancelar</a>
+    </form>
+
+    <script>
+        async function handleSubmit() {
+            const data = {
+                aluno_id: document.getElementById('aluno').value,
+                grupo_id: document.getElementById('grupo').value
+            };
+            try {
+                await alunoGrupoApi.editar('<%= alunoGrupo.id %>', data);
+                window.location.href = '/';
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao atualizar relação aluno-grupo');
+            }
+        }
+    </script>
+</body>
+</html>
