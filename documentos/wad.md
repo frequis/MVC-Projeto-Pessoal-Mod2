@@ -95,24 +95,82 @@ O model Turma representa a entidade de turma no sistema, responsável por armaze
   <p><sub>Fonte: Material produzido pelo autor (2025)</sub></p>
 </div>
 
-### 2.4. Guia de estilos (Semana 05)
 
-*Descreva aqui orientações gerais para o leitor sobre como utilizar os componentes do guia de estilos de sua solução.*
+### 2.3. WebAPI e endpoints (Semana 05)
 
+O sistema possui os seguintes endpoints organizados por entidade:
 
-### 2.5. Protótipo de alta fidelidade (Semana 05)
+#### Turmas
+- `GET /turmas`: Lista todas as turmas cadastradas
+- `GET /turmas/:id`: Obtém detalhes de uma turma específica
+- `POST /turmas`: Cria uma nova turma
+- `PUT /turmas/:id`: Atualiza dados de uma turma existente
+- `DELETE /turmas/:id`: Remove uma turma do sistema
 
-*Posicione aqui algumas imagens demonstrativas de seu protótipo de alta fidelidade e o link para acesso ao protótipo completo (mantenha o link sempre público para visualização).*
+#### Alunos
+- `GET /alunos`: Lista todos os alunos cadastrados
+- `GET /alunos/:id`: Obtém detalhes de um aluno específico
+- `POST /alunos`: Cadastra um novo aluno
+- `PUT /alunos/:id`: Atualiza dados de um aluno existente
+- `DELETE /alunos/:id`: Remove um aluno do sistema
 
-### 2.6. WebAPI e endpoints (Semana 05)
+#### Grupos
+- `GET /grupos`: Lista todos os grupos
+- `GET /grupos/:id`: Obtém detalhes de um grupo específico
+- `POST /grupos`: Cria um novo grupo
+- `PUT /grupos/:id`: Atualiza informações de um grupo
+- `DELETE /grupos/:id`: Remove um grupo do sistema
 
-*Utilize um link para outra página de documentação contendo a descrição completa de cada endpoint. Ou descreva aqui cada endpoint criado para seu sistema.*  
+#### Salas
+- `GET /salas`: Lista todas as salas disponíveis
+- `GET /salas/:id`: Obtém detalhes de uma sala específica
+- `POST /salas`: Cadastra uma nova sala
+- `PUT /salas/:id`: Atualiza informações de uma sala
+- `DELETE /salas/:id`: Remove uma sala do sistema
 
-### 2.7 Interface e Navegação (Semana 07)
+#### Reservas
+- `GET /reservas`: Lista todas as reservas
+- `GET /reservas/:id`: Obtém detalhes de uma reserva específica
+- `POST /reservas`: Cria uma nova reserva
+- `PUT /reservas/:id`: Atualiza uma reserva existente
+- `DELETE /reservas/:id`: Cancela uma reserva
 
-*Descreva e ilustre aqui o desenvolvimento do frontend do sistema web, explicando brevemente o que foi entregue em termos de código e sistema. Utilize prints de tela para ilustrar.*
+#### Associação Aluno-Grupo
+- `GET /aluno-grupo`: Lista todas as associações entre alunos e grupos
+- `GET /aluno-grupo/:id`: Obtém detalhes de uma associação específica
+- `POST /aluno-grupo`: Cria uma nova associação entre aluno e grupo
+- `PUT /aluno-grupo/:id`: Atualiza uma associação existente
+- `DELETE /aluno-grupo/:id`: Remove uma associação
 
----
+#### Páginas de Interface
+- `GET /`: Página inicial do sistema
+- `GET /turmas/novo`: Formulário para criar nova turma
+- `GET /turmas/editar/:id`: Formulário para editar turma
+- `GET /alunos/novo`: Formulário para cadastrar novo aluno
+- `GET /alunos/editar/:id`: Formulário para editar aluno
+- `GET /grupos/novo`: Formulário para criar novo grupo
+- `GET /grupos/editar/:id`: Formulário para editar grupo
+- `GET /salas/novo`: Formulário para cadastrar nova sala
+- `GET /salas/editar/:id`: Formulário para editar sala
+- `GET /reservas/novo`: Formulário para criar nova reserva
+- `GET /reservas/editar/:id`: Formulário para editar reserva
+
+### 2.4 Interface e Navegação (Semana 07)
+
+<div align="center">
+  <img src="../assets/geral.png" alt="Visão geral" width="100%">
+  <p><sub>Página inicial com as tabelas</sub></p>
+</div>
+
+<div align="center">
+  <img src="../assets/adicionar.png" alt="Tela de adição" width="100%">
+  <p><sub>Tela para adicionar informações</sub></p>
+</div>
+
+<div align="center">
+  <img src="../assets/editar.png" alt="Tela de edição" width="100%">
+  <p><sub>Tela para editar informações</sub></p>
+</div>
 
 ## <a name="c3"></a>3. Desenvolvimento da Aplicação Web (Semana 8)
 
