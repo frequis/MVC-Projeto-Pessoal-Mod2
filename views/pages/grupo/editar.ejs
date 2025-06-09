@@ -1,35 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Editar Sala</title>
+    <title>Editar Grupo</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
 </head>
 <body>
-    <h1>Editar Sala</h1>
-    <form id="editSalaForm">
+    <h1>Editar Grupo</h1>
+    <form id="editGrupoForm">
         <div>
-            <label for="sala_nome">Nome da Sala:</label>
-            <input type="text" id="sala_nome" name="sala_nome" value="<%= sala.sala_nome %>" required>
+            <label for="grupo_nome">Nome do Grupo:</label>
+            <input type="text" id="grupo_nome" name="grupo_nome" value="<%= grupo.grupo_nome %>" required>
         </div>
         <div>
-            <label for="capacidade">Capacidade:</label>
-            <input type="number" id="capacidade" name="capacidade" value="<%= sala.capacidade %>" required min="1">
+            <label for="quantidade">Quantidade de Membros:</label>
+            <input type="number" id="quantidade" name="quantidade" value="<%= grupo.quantidade %>" required min="1">
         </div>
         <button type="submit">Salvar Alterações</button>
         <a href="/" class="button">Cancelar</a>
     </form>
 
     <script>
-        document.getElementById('editSalaForm').addEventListener('submit', async (e) => {
+        document.getElementById('editGrupoForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const formData = {
-                sala_nome: document.getElementById('sala_nome').value,
-                capacidade: parseInt(document.getElementById('capacidade').value)
+                grupo_nome: document.getElementById('grupo_nome').value,
+                quantidade: parseInt(document.getElementById('quantidade').value)
             };
 
             try {
-                const response = await fetch(`/salas/<%= sala.sala_id %>`, {
+                const response = await fetch(`/grupos/<%= grupo.grupo_id %>`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
@@ -39,7 +39,7 @@
 
                 if (!response.ok) {
                     const error = await response.json();
-                    throw new Error(error.error || 'Erro ao atualizar sala');
+                    throw new Error(error.error || 'Erro ao atualizar grupo');
                 }
 
                 window.location.href = '/';

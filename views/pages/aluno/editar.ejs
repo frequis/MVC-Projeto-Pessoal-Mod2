@@ -3,44 +3,67 @@
 <head>
     <title>Editar Aluno</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
-    <script src="/js/script.js" defer></script>
 </head>
 <body>
     <h1>Editar Aluno</h1>
-    <form id="formAluno" onsubmit="event.preventDefault(); handleSubmit();">
+    <form id="editAlunoForm">
         <div>
-            <label for="nome">Nome:</label>
-            <input type="text" id="nome" name="nome" value="<%= aluno.nome %>" required>
+            <label for="aluno_nome">Nome do Aluno:</label>
+            <input type="text" id="aluno_nome" name="aluno_nome" value="<%= aluno.aluno_nome %>" required>
         </div>
         <div>
-            <label for="id_turma">Turma:</label>
-            <select id="id_turma" name="id_turma" required>
+            <label for="turma_nome">Turma:</label>
+            <select id="turma_nome" name="turma_nome" required>
                 <% turmas.forEach(turma => { %>
-                    <option value="<%= turma.id %>" 
-                            <%= turma.id === aluno.id_turma ? 'selected' : '' %>>
-                        <%= turma.nome %>
+                    <option value="<%= turma.turma_nome %>" 
+                        <%= turma.turma_nome === aluno.turma_nome ? 'selected' : '' %>>
+                        <%= turma.turma_nome %>
                     </option>
                 <% }); %>
             </select>
         </div>
-        <button type="submit">Atualizar</button>
+        <div>
+            <label for="grupo_nome">Grupo:</label>
+            <select id="grupo_nome" name="grupo_nome">
+                <option value="">Selecione um grupo</option>
+                <% grupos.forEach(grupo => { %>
+                    <option value="<%= grupo.grupo_nome %>"><%= grupo.grupo_nome %></option>
+                <% }); %>
+            </select>
+        </div>
+        <button type="submit">Salvar Alterações</button>
         <a href="/" class="button">Cancelar</a>
     </form>
 
     <script>
-        async function handleSubmit() {
-            const data = {
-                nome: document.getElementById('nome').value,
-                id_turma: document.getElementById('id_turma').value
+        document.getElementById('editAlunoForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                aluno_nome: document.getElementById('aluno_nome').value,
+                turma_nome: document.getElementById('turma_nome').value,
+                grupo_nome: document.getElementById('grupo_nome').value
             };
 
             try {
-                await alunoApi.editar('<%= aluno.id %>', data);
+                const response = await fetch(`/alunos/<%= aluno.aluno_id %>`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Erro ao atualizar aluno');
+                }
+
                 window.location.href = '/';
             } catch (error) {
-                console.error('Erro:', error);
+                alert(error.message);
             }
-        }
+        });
     </script>
 </body>
 </html>

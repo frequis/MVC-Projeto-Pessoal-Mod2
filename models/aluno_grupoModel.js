@@ -31,6 +31,14 @@ const create = async (aluno_nome, grupo_nome) => {
     return result.rows[0];
 };
 
+const update = async (id, aluno_nome, grupo_nome) => {
+    const result = await db.query(
+        'UPDATE aluno_grupo SET aluno_nome = $2, grupo_nome = $3 WHERE aluno_grupo_id = $1 RETURNING *',
+        [id, aluno_nome, grupo_nome]
+    );
+    return result.rows[0];
+};
+
 const remove = async (id) => {
     const result = await db.query(
         'DELETE FROM aluno_grupo WHERE aluno_grupo_id = $1 RETURNING *',
@@ -39,9 +47,19 @@ const remove = async (id) => {
     return result.rows[0];
 };
 
+const findByGrupoNome = async (grupo_nome) => {
+    const result = await db.query(
+        'SELECT * FROM aluno_grupo WHERE grupo_nome = $1',
+        [grupo_nome]
+    );
+    return result.rows.length > 0;
+};
+
 module.exports = {
   getAll,
   getById,
   create,
-  remove
+  update,
+  remove,
+  findByGrupoNome
 };

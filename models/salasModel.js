@@ -32,6 +32,14 @@ const create = async (sala_nome, capacidade) => {
     return result.rows[0];
 };
 
+const update = async (id, sala_nome, capacidade) => {
+    const result = await db.query(
+        'UPDATE sala SET sala_nome = $2, capacidade = $3 WHERE sala_id = $1 RETURNING *',
+        [id, sala_nome, capacidade]
+    );
+    return result.rows[0];
+};
+
 const remove = async (id) => {
     const result = await db.query(
         'DELETE FROM sala WHERE sala_id = $1 RETURNING *',
@@ -44,5 +52,6 @@ module.exports = {
   getAll,
   getById,
   create,
+  update,
   remove
 };

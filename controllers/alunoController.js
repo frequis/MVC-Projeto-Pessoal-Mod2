@@ -1,23 +1,32 @@
 const alunoModel = require('../models/alunoModel');
 
-const getAllAlunos = async () => {
+const getAllAlunos = async (req, res) => {
     try {
         const alunos = await alunoModel.getAll();
-        return alunos;
-    } catch (err) {
-        console.error('Error getting alunos:', err);
-        return [];
+        if (!res) return alunos;
+        res.status(200).json(alunos);
+    } catch (error) {
+        console.error('Error getting alunos:', error);
+        if (!res) return [];
+        res.status(500).json({ error: error.message });
     }
 };
 
 const getAlunoById = async (req, res) => {
-  try {
-    const aluno = await alunoModel.getById(req.params.id);
-    if (!aluno) return res.status(404).json({ error: 'Aluno não encontrado' });
-    res.status(200).json(aluno);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+    try {
+        const id = req.params ? req.params.id : req;
+        const aluno = await alunoModel.getById(id);
+        if (!res) return aluno;
+        if (!aluno) {
+            res.status(404).json({ message: 'Aluno não encontrado' });
+            return;
+        }
+        res.status(200).json(aluno);
+    } catch (error) {
+        console.error('Error getting aluno:', error);
+        if (!res) return null;
+        res.status(500).json({ error: error.message });
+    }
 };
 
 const createAluno = async (aluno_nome, turma_nome) => {
@@ -33,15 +42,22 @@ const createAluno = async (aluno_nome, turma_nome) => {
     }
 };
 
-const updateAluno = async (req, res) => {
-  try {
-    const { nome, id_turma } = req.body;
-    const alunoAtualizado = await alunoModel.update(req.params.id, nome, id_turma);
-    if (!alunoAtualizado) return res.status(404).json({ error: 'Aluno não encontrado' });
-    res.status(200).json(alunoAtualizado);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+const updateAluno = async (id, aluno_nome, turma_nome) => {
+    try {
+        if (!id || !aluno_nome || !turma_nome) {
+            throw new Error('ID, nome do aluno e turma são obrigatórios');
+        }
+
+        const alunoAtualizado = await alunoModel.update(id, aluno_nome, turma_nome);
+        
+        if (!alunoAtualizado) {
+            throw new Error('Aluno não encontrado');
+        }
+
+        return alunoAtualizado;
+    } catch (error) {
+        throw error;
+    }
 };
 
 const deleteAluno = async (req, res) => {
@@ -61,9 +77,9 @@ const deleteAluno = async (req, res) => {
 };
 
 module.exports = {
-  getAllAlunos,
-  getAlunoById,
-  createAluno,
-  updateAluno,
-  deleteAluno,
+    getAllAlunos,
+    getAlunoById,
+    createAluno,
+    updateAluno,
+    deleteAluno,
 };

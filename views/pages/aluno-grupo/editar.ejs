@@ -3,51 +3,64 @@
 <head>
     <title>Editar Relação Aluno-Grupo</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
-    <script src="/js/script.js" defer></script>
 </head>
 <body>
     <h1>Editar Relação Aluno-Grupo</h1>
-    <form id="formAlunoGrupo" onsubmit="event.preventDefault(); handleSubmit();">
+    <form id="editAlunoGrupoForm">
         <div>
-            <label for="aluno">Aluno:</label>
-            <select id="aluno" name="aluno" required>
+            <label for="aluno_nome">Aluno:</label>
+            <select id="aluno_nome" name="aluno_nome" required>
                 <% alunos.forEach(aluno => { %>
-                    <option value="<%= aluno.id %>" 
-                            <%= aluno.id === alunoGrupo.id_aluno ? 'selected' : '' %>>
-                        <%= aluno.nome %>
+                    <option value="<%= aluno.aluno_nome %>" 
+                        <%= aluno.aluno_nome === alunoGrupo.aluno_nome ? 'selected' : '' %>>
+                        <%= aluno.aluno_nome %>
                     </option>
                 <% }); %>
             </select>
         </div>
         <div>
-            <label for="grupo">Grupo:</label>
-            <select id="grupo" name="grupo" required>
+            <label for="grupo_nome">Grupo:</label>
+            <select id="grupo_nome" name="grupo_nome" required>
                 <% grupos.forEach(grupo => { %>
-                    <option value="<%= grupo.id %>"
-                            <%= grupo.id === alunoGrupo.id_grupo ? 'selected' : '' %>>
-                        <%= grupo.nome %>
+                    <option value="<%= grupo.grupo_nome %>"
+                        <%= grupo.grupo_nome === alunoGrupo.grupo_nome ? 'selected' : '' %>>
+                        <%= grupo.grupo_nome %>
                     </option>
                 <% }); %>
             </select>
         </div>
-        <button type="submit">Atualizar</button>
+        <button type="submit">Salvar Alterações</button>
         <a href="/" class="button">Cancelar</a>
     </form>
 
     <script>
-        async function handleSubmit() {
-            const data = {
-                aluno_id: document.getElementById('aluno').value,
-                grupo_id: document.getElementById('grupo').value
+        document.getElementById('editAlunoGrupoForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                aluno_nome: document.getElementById('aluno_nome').value,
+                grupo_nome: document.getElementById('grupo_nome').value
             };
+
             try {
-                await alunoGrupoApi.editar('<%= alunoGrupo.id %>', data);
+                const response = await fetch(`/aluno-grupo/<%= alunoGrupo.aluno_grupo_id %>`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Erro ao atualizar relação aluno-grupo');
+                }
+
                 window.location.href = '/';
             } catch (error) {
-                console.error('Erro:', error);
-                alert('Erro ao atualizar relação aluno-grupo');
+                alert(error.message);
             }
-        }
+        });
     </script>
 </body>
 </html>

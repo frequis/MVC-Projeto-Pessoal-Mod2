@@ -41,17 +41,21 @@ const createAlunoGrupo = async (aluno_nome, grupo_nome) => {
     }
 };
 
-const updateAlunoGrupo = async (req, res) => {
+const updateAlunoGrupo = async (id, aluno_nome, grupo_nome) => {
     try {
-        const { aluno_nome, grupo_nome } = req.body;
-        const alunoGrupo = await alunoGrupoModel.update(req.params.id, aluno_nome, grupo_nome);
-        if (!alunoGrupo) {
-            res.status(404).json({ message: 'Relação aluno-grupo não encontrada' });
-            return;
+        if (!id || !aluno_nome || !grupo_nome) {
+            throw new Error('ID, nome do aluno e nome do grupo são obrigatórios');
         }
-        res.status(200).json(alunoGrupo);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+
+        const alunoGrupoAtualizado = await alunoGrupoModel.update(id, aluno_nome, grupo_nome);
+        
+        if (!alunoGrupoAtualizado) {
+            throw new Error('Relação aluno-grupo não encontrada');
+        }
+
+        return alunoGrupoAtualizado;
+    } catch (error) {
+        throw error;
     }
 };
 

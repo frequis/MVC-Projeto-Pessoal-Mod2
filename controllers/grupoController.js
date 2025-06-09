@@ -1,4 +1,5 @@
 const grupoModel = require('../models/grupoModel');
+const alunoGrupoModel = require('../models/aluno_grupoModel');
 
 const getAllGrupos = async (req, res) => {
     try {
@@ -43,31 +44,60 @@ const createGrupo = async (grupo_nome, quantidade) => {
 
 const updateGrupo = async (req, res) => {
     try {
+        const { id } = req.params;
         const { grupo_nome, quantidade } = req.body;
-        const grupoAtualizado = await grupoModel.update(req.params.id, grupo_nome, quantidade);
-        if (!grupoAtualizado) {
-            res.status(404).json({ message: 'Grupo não encontrado' });
-            return;
+
+        if (!id || !grupo_nome || !quantidade) {
+            return res.status(400).json({ 
+                error: 'ID, nome do grupo e quantidade são obrigatórios' 
+            });
         }
-        res.status(200).json(grupoAtualizado);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+
+        // Get existing grupo to check current name
+        const existingGrupo = await grupoModel.getById(id);
+        if (!existingGrupo) {
+            return res.status(404).json({ error: 'Grupo não encontrado' });
+        }
+
+        // Check if there are associated aluno_grupo records
+        const hasAssociations = await alunoGrupoModel.findByGrupoNome(existingGrupo.grupo_nome);
+        if (hasAssociations && existingGrupo.grupo_nome !== grupo_nome) {
+            return res.status(400).json({ 
+                error: 'Não é possível alterar o nome do grupo pois existem alunos associados' 
+            });
+        }
+
+        const grupoAtualizado = await grupoModel.update(id, grupo_nome, quantidade);
+        return res.status(200).json(grupoAtualizado);
+    } catch (error) {
+        console.error('Error updating grupo:', error);
+        return res.status(500).json({ error: error.message });
     }
 };
 
 const deleteGrupo = async (req, res) => {
     try {
-        const id = req.params.id;
-        const deletedGrupo = await grupoModel.remove(id);
+        const { id } = req.params;
         
-        if (!deletedGrupo) {
+        // Get grupo details first
+        const grupo = await grupoModel.getById(id);
+        if (!grupo) {
             return res.status(404).json({ error: 'Grupo não encontrado' });
         }
-        
-        res.status(204).send();
+
+        // Check if there are associated aluno_grupo records
+        const hasAssociations = await alunoGrupoModel.findByGrupoNome(grupo.grupo_nome);
+        if (hasAssociations) {
+            return res.status(400).json({ 
+                error: 'Não é possível excluir o grupo pois existem alunos associados' 
+            });
+        }
+
+        const deletedGrupo = await grupoModel.remove(id);
+        return res.status(204).send();
     } catch (error) {
         console.error('Error deleting grupo:', error);
-        res.status(500).json({ error: error.message });
+        return res.status(500).json({ error: error.message });
     }
 };
 

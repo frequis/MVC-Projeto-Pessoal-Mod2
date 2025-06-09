@@ -29,11 +29,11 @@ const create = async (aluno_nome, turma_nome) => {
 };
 
 const update = async (id, aluno_nome, turma_nome) => {
-  const result = await db.query(
-    'UPDATE aluno SET aluno_nome = $1, turma_nome = $2 WHERE aluno_id = $3 RETURNING *',
-    [aluno_nome, turma_nome, id]
-  );
-  return result.rows[0];
+    const result = await db.query(
+        'UPDATE aluno SET aluno_nome = $2, turma_nome = $3 WHERE aluno_id = $1 RETURNING *',
+        [id, aluno_nome, turma_nome]
+    );
+    return result.rows[0];
 };
 
 const remove = async (id) => {

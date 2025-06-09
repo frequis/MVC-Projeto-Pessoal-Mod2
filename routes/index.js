@@ -66,11 +66,25 @@ router.post('/turmas', async (req, res) => {
 });
 router.put('/turmas/:id', async (req, res) => {
     try {
-        const result = await turmaController.updateTurma(req.params.id, req.body);
-        res.status(200).json(result);
+        const { id } = req.params;
+        const { turma_nome, ano_de_entrada } = req.body;
+        
+        if (!id || !turma_nome || !ano_de_entrada) {
+            return res.status(400).json({ 
+                error: 'ID, nome da turma e ano de entrada são obrigatórios' 
+            });
+        }
+
+        const result = await turmaController.updateTurma(
+            id,
+            turma_nome,
+            ano_de_entrada
+        );
+        
+        return res.status(200).json(result);
     } catch (error) {
         console.error('Erro ao atualizar turma:', error);
-        res.status(500).json({ error: error.message });
+        return res.status(500).json({ error: error.message });
     }
 });
 router.delete('/turmas/:id', turmaController.deleteTurma);
@@ -89,7 +103,13 @@ router.get('/alunos/editar/:id', async (req, res) => {
     try {
         const aluno = await alunoController.getAlunoById(req.params.id);
         const turmas = await turmaController.getAllTurmas();
-        res.render('pages/aluno/editar', { aluno, turmas });
+        const grupos = await grupoController.getAllGrupos(); // Add this line
+
+        res.render('pages/aluno/editar', { 
+            aluno, 
+            turmas,
+            grupos // Add this line
+        });
     } catch (error) {
         console.error('Erro ao carregar aluno:', error);
         res.status(500).render('error', { error: 'Erro ao carregar aluno' });
@@ -116,19 +136,25 @@ router.post('/alunos', async (req, res) => {
 });
 router.put('/alunos/:id', async (req, res) => {
     try {
+        const { id } = req.params;
         const { aluno_nome, turma_nome } = req.body;
         
-        if (!aluno_nome || !turma_nome) {
+        if (!id || !aluno_nome || !turma_nome) {
             return res.status(400).json({ 
-                error: 'Nome do aluno e turma são obrigatórios' 
+                error: 'ID, nome do aluno e turma são obrigatórios' 
             });
         }
 
-        const result = await alunoController.updateAluno(req.params.id, req.body);
-        res.status(200).json(result);
+        const result = await alunoController.updateAluno(
+            id,
+            aluno_nome,
+            turma_nome
+        );
+        
+        return res.status(200).json(result);
     } catch (error) {
         console.error('Erro ao atualizar aluno:', error);
-        res.status(500).json({ error: error.message });
+        return res.status(500).json({ error: error.message });
     }
 });
 router.delete('/alunos/:id', alunoController.deleteAluno);
@@ -145,10 +171,19 @@ router.get('/grupos/novo', (req, res) => {
 router.get('/grupos/editar/:id', async (req, res) => {
     try {
         const grupo = await grupoController.getGrupoById(req.params.id);
+        
+        if (!grupo) {
+            return res.status(404).render('error', { 
+                error: 'Grupo não encontrado' 
+            });
+        }
+        
         res.render('pages/grupo/editar', { grupo });
     } catch (error) {
         console.error('Erro ao carregar grupo:', error);
-        res.status(500).render('error', { error: 'Erro ao carregar grupo' });
+        res.status(500).render('error', { 
+            error: 'Erro ao carregar dados do grupo' 
+        });
     }
 });
 router.get('/grupos/:id', grupoController.getGrupoById);
@@ -198,7 +233,29 @@ router.post('/salas', async (req, res) => {
         return res.status(500).json({ error: error.message });
     }
 });
-router.put('/salas/:id', salasController.updateSala);
+router.put('/salas/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { sala_nome, capacidade } = req.body;
+        
+        if (!id || !sala_nome || !capacidade) {
+            return res.status(400).json({ 
+                error: 'ID, nome da sala e capacidade são obrigatórios' 
+            });
+        }
+
+        const result = await salasController.updateSala(
+            id,
+            sala_nome,
+            capacidade
+        );
+        
+        return res.status(200).json(result);
+    } catch (error) {
+        console.error('Erro ao atualizar sala:', error);
+        return res.status(500).json({ error: error.message });
+    }
+});
 router.delete('/salas/:id', salasController.deleteSala);
 
 // Rotas para Reservas
@@ -278,7 +335,29 @@ router.post('/aluno-grupo', async (req, res) => {
         return res.status(500).json({ error: error.message });
     }
 });
-router.put('/aluno-grupo/:id', alunoGrupoController.updateAlunoGrupo);
+router.put('/aluno-grupo/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { aluno_nome, grupo_nome } = req.body;
+        
+        if (!id || !aluno_nome || !grupo_nome) {
+            return res.status(400).json({ 
+                error: 'ID, nome do aluno e nome do grupo são obrigatórios' 
+            });
+        }
+
+        const result = await alunoGrupoController.updateAlunoGrupo(
+            id,
+            aluno_nome,
+            grupo_nome
+        );
+        
+        return res.status(200).json(result);
+    } catch (error) {
+        console.error('Erro ao atualizar relação aluno-grupo:', error);
+        return res.status(500).json({ error: error.message });
+    }
+});
 router.delete('/aluno-grupo/:id', alunoGrupoController.deleteAlunoGrupo);
 
 module.exports = router;

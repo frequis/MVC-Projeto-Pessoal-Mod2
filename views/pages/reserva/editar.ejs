@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Editar Reserva</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+</head>
+<body>
+    <h1>Editar Reserva</h1>
+    <form id="editReservaForm">
+        <div>
+            <label for="sala_nome">Sala:</label>
+            <select id="sala_nome" name="sala_nome" required>
+                <% salas.forEach(sala => { %>
+                    <option value="<%= sala.sala_nome %>" 
+                        <%= sala.sala_nome === reserva.sala_nome ? 'selected' : '' %>>
+                        <%= sala.sala_nome %>
+                    </option>
+                <% }); %>
+            </select>
+        </div>
+        <div>
+            <label for="aluno_nome">Aluno:</label>
+            <input type="text" id="aluno_nome" name="aluno_nome" value="<%= reserva.aluno_nome %>" required>
+        </div>
+        <div>
+            <label for="grupo_nome">Grupo:</label>
+            <select id="grupo_nome" name="grupo_nome" required>
+                <% grupos.forEach(grupo => { %>
+                    <option value="<%= grupo.grupo_nome %>"
+                        <%= grupo.grupo_nome === reserva.grupo_nome ? 'selected' : '' %>>
+                        <%= grupo.grupo_nome %>
+                    </option>
+                <% }); %>
+            </select>
+        </div>
+        <div>
+            <label for="começo">Data/Hora Início:</label>
+            <input type="datetime-local" id="começo" name="começo" 
+                value="<%= new Date(reserva.começo).toISOString().slice(0, 16) %>" required>
+        </div>
+        <div>
+            <label for="fim">Data/Hora Fim:</label>
+            <input type="datetime-local" id="fim" name="fim" 
+                value="<%= new Date(reserva.fim).toISOString().slice(0, 16) %>" required>
+        </div>
+        <button type="submit">Salvar Alterações</button>
+        <a href="/" class="button">Cancelar</a>
+    </form>
+
+    <script>
+        document.getElementById('editReservaForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                sala_nome: document.getElementById('sala_nome').value,
+                aluno_nome: document.getElementById('aluno_nome').value,
+                grupo_nome: document.getElementById('grupo_nome').value,
+                começo: document.getElementById('começo').value,
+                fim: document.getElementById('fim').value
+            };
+
+            try {
+                const response = await fetch(`/reservas/<%= reserva.reserva_id %>`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Erro ao atualizar reserva');
+                }
+
+                window.location.href = '/';
+            } catch (error) {
+                alert(error.message);
+            }
+        });
+    </script>
+</body>
+</html>

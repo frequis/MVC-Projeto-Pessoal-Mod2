@@ -47,27 +47,21 @@ const createTurma = async (req, res) => {
     }
 };
 
-const updateTurma = async (req, res) => {
+const updateTurma = async (id, turma_nome, ano_de_entrada) => {
     try {
-        const id = req.params.id;
-        const { turma_nome, ano_de_entrada } = req.body;
-        
-        if (!turma_nome || !ano_de_entrada) {
-            return res.status(400).json({
-                error: 'Nome da turma e ano de entrada são obrigatórios'
-            });
+        if (!id || !turma_nome || !ano_de_entrada) {
+            throw new Error('ID, nome da turma e ano de entrada são obrigatórios');
         }
 
-        const updatedTurma = await turmaModel.update(id, turma_nome, ano_de_entrada);
+        const turmaAtualizada = await turmaModel.update(id, turma_nome, ano_de_entrada);
         
-        if (!updatedTurma) {
-            return res.status(404).json({ error: 'Turma não encontrada' });
+        if (!turmaAtualizada) {
+            throw new Error('Turma não encontrada');
         }
-        
-        res.status(200).json(updatedTurma);
+
+        return turmaAtualizada;
     } catch (error) {
-        console.error('Error updating turma:', error);
-        res.status(500).json({ error: error.message });
+        throw error;
     }
 };
 

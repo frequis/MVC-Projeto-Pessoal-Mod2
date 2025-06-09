@@ -41,17 +41,21 @@ const createSala = async (sala_nome, capacidade) => {
     }
 };
 
-const updateSala = async (req, res) => {
+const updateSala = async (id, sala_nome, capacidade) => {
     try {
-        const { capacidade, sala_nome } = req.body;
-        const salaAtualizada = await salasModel.update(req.params.id, capacidade, sala_nome);
-        if (!salaAtualizada) {
-            res.status(404).json({ message: 'Sala não encontrada' });
-            return;
+        if (!id || !sala_nome || !capacidade) {
+            throw new Error('ID, nome da sala e capacidade são obrigatórios');
         }
-        res.status(200).json(salaAtualizada);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+
+        const salaAtualizada = await salasModel.update(id, sala_nome, capacidade);
+        
+        if (!salaAtualizada) {
+            throw new Error('Sala não encontrada');
+        }
+
+        return salaAtualizada;
+    } catch (error) {
+        throw error;
     }
 };
 
