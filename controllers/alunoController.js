@@ -42,13 +42,19 @@ const updateAluno = async (req, res) => {
 };
 
 const deleteAluno = async (req, res) => {
-  try {
-    const alunoDeletado = await alunoModel.remove(req.params.id);
-    if (!alunoDeletado) return res.status(404).json({ error: 'Aluno não encontrado' });
-    res.status(200).json(alunoDeletado);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+    try {
+        const id = req.params.id;
+        const deletedAluno = await alunoModel.remove(id);
+        
+        if (!deletedAluno) {
+            return res.status(404).json({ error: 'Aluno não encontrado' });
+        }
+        
+        res.status(204).send();
+    } catch (error) {
+        console.error('Error deleting aluno:', error);
+        res.status(500).json({ error: error.message });
+    }
 };
 
 module.exports = {

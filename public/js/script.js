@@ -12,82 +12,57 @@ const handleError = (error) => {
     alert(error.message || 'Ocorreu um erro na operação');
 };
 
-// API Turmas
-const turmaApi = {
-    async criar(data) {
-        try {
-            const response = await fetch('/turmas', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            return await handleResponse(response);
-        } catch (error) {
-            handleError(error);
+const handleDelete = async (url, itemName) => {
+    try {
+        if (!confirm(`Tem certeza que deseja excluir este(a) ${itemName}?`)) {
+            return;
         }
+
+        const response = await fetch(url, {
+            method: 'DELETE'
+        });
+
+        if (!response.ok) {
+            throw new Error(`Erro ao excluir ${itemName}`);
+        }
+
+        window.location.reload();
+    } catch (error) {
+        console.error('Erro na exclusão:', error);
+        alert(error.message);
     }
 };
 
-// API Alunos
-const alunoApi = {
-    async criar(data) {
-        try {
-            const response = await fetch('/alunos', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            return await handleResponse(response);
-        } catch (error) {
-            handleError(error);
+// API Objects
+const api = {
+    turma: {
+        excluir: async (id) => {
+            await handleDelete(`/turmas/${id}`, 'turma');
         }
-    }
-};
-
-// API Grupos
-const grupoApi = {
-    async criar(data) {
-        try {
-            const response = await fetch('/grupos', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            return await handleResponse(response);
-        } catch (error) {
-            handleError(error);
+    },
+    aluno: {
+        excluir: async (id) => {
+            await handleDelete(`/alunos/${id}`, 'aluno');
         }
-    }
-};
-
-// API Salas
-const salaApi = {
-    async criar(data) {
-        try {
-            const response = await fetch('/salas', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            return await handleResponse(response);
-        } catch (error) {
-            handleError(error);
+    },
+    grupo: {
+        excluir: async (id) => {
+            await handleDelete(`/grupos/${id}`, 'grupo');
         }
-    }
-};
-
-// API Reservas
-const reservaApi = {
-    async criar(data) {
-        try {
-            const response = await fetch('/reservas', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            return await handleResponse(response);
-        } catch (error) {
-            handleError(error);
+    },
+    sala: {
+        excluir: async (id) => {
+            await handleDelete(`/salas/${id}`, 'sala');
+        }
+    },
+    reserva: {
+        excluir: async (id) => {
+            await handleDelete(`/reservas/${id}`, 'reserva');
+        }
+    },
+    alunoGrupo: {
+        excluir: async (id) => {
+            await handleDelete(`/aluno-grupo/${id}`, 'vínculo aluno-grupo');
         }
     }
 };

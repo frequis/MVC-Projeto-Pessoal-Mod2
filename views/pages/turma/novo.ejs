@@ -3,37 +3,49 @@
 <head>
     <title>Nova Turma</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
-    <script src="/js/script.js" defer></script>
 </head>
 <body>
     <h1>Adicionar Nova Turma</h1>
-    <form id="formTurma" onsubmit="event.preventDefault(); handleSubmit();">
+    <form id="novaTurmaForm">
         <div>
-            <label for="nome">Nome:</label>
-            <input type="text" id="nome" name="nome" required>
+            <label for="turma_nome">Nome da Turma:</label>
+            <input type="text" id="turma_nome" name="turma_nome" required>
         </div>
         <div>
-            <label for="ano">Ano de Entrada:</label>
-            <input type="number" id="ano" name="ano" required>
+            <label for="ano_de_entrada">Ano de Entrada:</label>
+            <input type="number" id="ano_de_entrada" name="ano_de_entrada" required min="2000">
         </div>
-        <button type="submit">Salvar</button>
-        <a href="/" class="button">Cancelar</a>
+        <button type="submit">Criar Turma</button>
     </form>
 
     <script>
-        async function handleSubmit() {
-            const data = {
-                nome: document.getElementById('nome').value,
-                ano_de_entrada: document.getElementById('ano').value
+        document.getElementById('novaTurmaForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                turma_nome: document.getElementById('turma_nome').value,
+                ano_de_entrada: parseInt(document.getElementById('ano_de_entrada').value)
             };
+
             try {
-                await turmaApi.criar(data);
+                const response = await fetch('/turmas', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Erro ao criar turma');
+                }
+
                 window.location.href = '/';
             } catch (error) {
-                console.error('Erro:', error);
-                alert('Erro ao criar turma');
+                alert(error.message);
             }
-        }
+        });
     </script>
 </body>
 </html>

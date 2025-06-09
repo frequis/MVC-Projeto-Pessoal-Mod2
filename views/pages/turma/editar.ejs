@@ -3,37 +3,50 @@
 <head>
     <title>Editar Turma</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
-    <script src="/js/script.js" defer></script>
 </head>
 <body>
     <h1>Editar Turma</h1>
-    <form id="formTurma" onsubmit="event.preventDefault(); handleSubmit();">
+    <form id="editarTurmaForm">
         <div>
-            <label for="nome">Nome:</label>
-            <input type="text" id="nome" name="nome" value="<%= turma.nome %>" required>
+            <label for="turma_nome">Nome:</label>
+            <input type="text" id="turma_nome" name="turma_nome" value="<%= turma ? turma.turma_nome : '' %>" required>
         </div>
         <div>
             <label for="ano_de_entrada">Ano de Entrada:</label>
-            <input type="number" id="ano_de_entrada" name="ano_de_entrada" value="<%= turma.ano_de_entrada %>" required>
+            <input type="number" id="ano_de_entrada" name="ano_de_entrada" value="<%= turma ? turma.ano_de_entrada : '' %>" required min="2000">
         </div>
         <button type="submit">Atualizar</button>
         <a href="/" class="button">Cancelar</a>
     </form>
 
     <script>
-        async function handleSubmit() {
-            const data = {
-                nome: document.getElementById('nome').value,
-                ano_de_entrada: document.getElementById('ano_de_entrada').value
+        document.getElementById('editarTurmaForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                turma_nome: document.getElementById('turma_nome').value,
+                ano_de_entrada: parseInt(document.getElementById('ano_de_entrada').value)
             };
 
             try {
-                await turmaApi.editar('<%= turma.id %>', data);
+                const response = await fetch('/turmas/<%= turma.turma_id %>', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Erro ao atualizar turma');
+                }
+
                 window.location.href = '/';
             } catch (error) {
-                console.error('Erro:', error);
+                alert(error.message);
             }
-        }
+        });
     </script>
 </body>
 </html>

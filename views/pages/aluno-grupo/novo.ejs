@@ -3,44 +3,58 @@
 <head>
     <title>Nova Relação Aluno-Grupo</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
-    <script src="/js/script.js" defer></script>
 </head>
 <body>
     <h1>Adicionar Nova Relação Aluno-Grupo</h1>
-    <form id="formAlunoGrupo" onsubmit="event.preventDefault(); handleSubmit();">
+    <form id="formAlunoGrupo">
         <div>
-            <label for="id_aluno">Aluno:</label>
-            <select id="id_aluno" name="id_aluno" required>
+            <label for="aluno_nome">Aluno:</label>
+            <select id="aluno_nome" name="aluno_nome" required>
                 <% alunos.forEach(aluno => { %>
-                    <option value="<%= aluno.id %>"><%= aluno.nome %></option>
+                    <option value="<%= aluno.aluno_nome %>"><%= aluno.aluno_nome %></option>
                 <% }); %>
             </select>
         </div>
         <div>
-            <label for="id_grupo">Grupo:</label>
-            <select id="id_grupo" name="id_grupo" required>
+            <label for="grupo_nome">Grupo:</label>
+            <select id="grupo_nome" name="grupo_nome" required>
                 <% grupos.forEach(grupo => { %>
-                    <option value="<%= grupo.id %>"><%= grupo.nome %></option>
+                    <option value="<%= grupo.grupo_nome %>"><%= grupo.grupo_nome %></option>
                 <% }); %>
             </select>
         </div>
-        <button type="submit">Salvar</button>
+        <button type="submit">Criar</button>
         <a href="/" class="button">Cancelar</a>
     </form>
 
     <script>
-        async function handleSubmit() {
-            const data = {
-                id_aluno: document.getElementById('id_aluno').value,
-                id_grupo: document.getElementById('id_grupo').value
+        document.getElementById('formAlunoGrupo').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                aluno_nome: document.getElementById('aluno_nome').value,
+                grupo_nome: document.getElementById('grupo_nome').value
             };
+
             try {
-                await alunoGrupoApi.criar(data);
+                const response = await fetch('/aluno-grupo', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Erro ao criar relação aluno-grupo');
+                }
+
                 window.location.href = '/';
             } catch (error) {
-                console.error('Erro:', error);
+                alert(error.message);
             }
-        }
+        });
     </script>
 </body>
 </html>

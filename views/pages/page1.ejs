@@ -26,13 +26,13 @@
       <% if (turmas && turmas.length > 0) { %>
         <% turmas.forEach(turma => { %>
           <tr>
-            <td><%= turma.id %></td>
-            <td><%= turma.nome %></td>
+            <td><%= turma.turma_id %></td>
+            <td><%= turma.turma_nome %></td>
             <td><%= turma.ano_de_entrada %></td>
             <td>
               <div class="action-buttons">
-                <button onclick="location.href='/turmas/editar/<%= turma.id %>'">Editar</button>
-                <button class="delete-button" onclick="turmaApi.excluir('<%= turma.id %>')">Excluir</button>
+                <button onclick="location.href='/turmas/editar/<%= turma.turma_id %>'">Editar</button>
+                <button class="delete-button" onclick="api.turma.excluir('<%= turma.turma_id %>')">Excluir</button>
               </div>
             </td>
           </tr>
@@ -61,13 +61,13 @@
       <% if (alunos && alunos.length > 0) { %>
         <% alunos.forEach(aluno => { %>
           <tr>
-            <td><%= aluno.id %></td>
-            <td><%= aluno.nome %></td>
-            <td><%= aluno.id_turma %></td>
+            <td><%= aluno.aluno_id %></td>
+            <td><%= aluno.aluno_nome %></td>
+            <td><%= aluno.turma_nome %></td>
             <td>
               <div class="action-buttons">
-                <button onclick="location.href='/alunos/editar/<%= aluno.id %>'">Editar</button>
-                <button class="delete-button" onclick="alunoApi.excluir('<%= aluno.id %>')">Excluir</button>
+                <button onclick="location.href='/alunos/editar/<%= aluno.aluno_id %>'">Editar</button>
+                <button class="delete-button" onclick="api.aluno.excluir('<%= aluno.aluno_id %>')">Excluir</button>
               </div>
             </td>
           </tr>
@@ -89,6 +89,7 @@
         <th>ID</th>
         <th>Nome</th>
         <th>Quantidade</th>
+        <th>Alunos</th>
         <th>Ações</th>
       </tr>
     </thead>
@@ -96,19 +97,20 @@
       <% if (grupos && grupos.length > 0) { %>
         <% grupos.forEach(grupo => { %>
           <tr>
-            <td><%= grupo.id %></td>
-            <td><%= grupo.nome %></td>
+            <td><%= grupo.grupo_id %></td>
+            <td><%= grupo.grupo_nome %></td>
             <td><%= grupo.quantidade %></td>
+            <td><%= grupo.alunos ? grupo.alunos.join(', ') : '' %></td>
             <td>
               <div class="action-buttons">
-                <button onclick="location.href='/grupos/editar/<%= grupo.id %>'">Editar</button>
-                <button class="delete-button" onclick="grupoApi.excluir('<%= grupo.id %>')">Excluir</button>
+                <button onclick="location.href='/grupos/editar/<%= grupo.grupo_id %>'">Editar</button>
+                <button class="delete-button" onclick="api.grupo.excluir('<%= grupo.grupo_id %>')">Excluir</button>
               </div>
             </td>
           </tr>
         <% }) %>
       <% } else { %>
-        <tr><td colspan="4">Nenhum grupo encontrado</td></tr>
+        <tr><td colspan="5">Nenhum grupo encontrado</td></tr>
       <% } %>
     </tbody>
   </table>
@@ -124,6 +126,7 @@
         <th>ID</th>
         <th>Nome</th>
         <th>Capacidade</th>
+        <th>Grupos Reservados</th>
         <th>Ações</th>
       </tr>
     </thead>
@@ -131,19 +134,20 @@
       <% if (salas && salas.length > 0) { %>
         <% salas.forEach(sala => { %>
           <tr>
-            <td><%= sala.id %></td>
-            <td><%= sala.nome %></td>
+            <td><%= sala.sala_id %></td>
+            <td><%= sala.sala_nome %></td>
             <td><%= sala.capacidade %></td>
+            <td><%= sala.grupos_reservados ? sala.grupos_reservados.join(', ') : '' %></td>
             <td>
               <div class="action-buttons">
-                <button onclick="location.href='/salas/editar/<%= sala.id %>'">Editar</button>
-                <button class="delete-button" onclick="salaApi.excluir('<%= sala.id %>')">Excluir</button>
+                <button onclick="location.href='/salas/editar/<%= sala.sala_id %>'">Editar</button>
+                <button class="delete-button" onclick="api.sala.excluir('<%= sala.sala_id %>')">Excluir</button>
               </div>
             </td>
           </tr>
         <% }) %>
       <% } else { %>
-        <tr><td colspan="4">Nenhuma sala encontrada</td></tr>
+        <tr><td colspan="5">Nenhuma sala encontrada</td></tr>
       <% } %>
     </tbody>
   </table>
@@ -158,6 +162,7 @@
       <tr>
         <th>ID</th>
         <th>Sala</th>
+        <th>Aluno</th>
         <th>Grupo</th>
         <th>Início</th>
         <th>Fim</th>
@@ -168,21 +173,22 @@
       <% if (reservas && reservas.length > 0) { %>
         <% reservas.forEach(reserva => { %>
           <tr>
-            <td><%= reserva.id %></td>
-            <td><%= reserva.sala_id %></td>
-            <td><%= reserva.id_grupo %></td>
-            <td><%= reserva.começo %></td>
-            <td><%= reserva.fim %></td>
+            <td><%= reserva.reserva_id %></td>
+            <td><%= reserva.sala_nome %></td>
+            <td><%= reserva.aluno_nome %></td>
+            <td><%= reserva.grupo_nome %></td>
+            <td><%= new Date(reserva.começo).toLocaleString() %></td>
+            <td><%= new Date(reserva.fim).toLocaleString() %></td>
             <td>
               <div class="action-buttons">
-                <button onclick="location.href='/reservas/editar/<%= reserva.id %>'">Editar</button>
-                <button class="delete-button" onclick="reservaApi.excluir('<%= reserva.id %>')">Excluir</button>
+                <button onclick="location.href='/reservas/editar/<%= reserva.reserva_id %>'">Editar</button>
+                <button class="delete-button" onclick="api.reserva.excluir('<%= reserva.reserva_id %>')">Excluir</button>
               </div>
             </td>
           </tr>
         <% }) %>
       <% } else { %>
-        <tr><td colspan="6">Nenhuma reserva encontrada</td></tr>
+        <tr><td colspan="7">Nenhuma reserva encontrada</td></tr>
       <% } %>
     </tbody>
   </table>
@@ -198,6 +204,7 @@
         <th>ID</th>
         <th>Aluno</th>
         <th>Grupo</th>
+        <th>Turma</th>
         <th>Ações</th>
       </tr>
     </thead>
@@ -205,19 +212,20 @@
       <% if (alunoGrupos && alunoGrupos.length > 0) { %>
         <% alunoGrupos.forEach(ag => { %>
           <tr>
-            <td><%= ag.id %></td>
-            <td><%= ag.id_aluno %></td>
-            <td><%= ag.id_grupo %></td>
+            <td><%= ag.aluno_grupo_id %></td>
+            <td><%= ag.aluno_nome %></td>
+            <td><%= ag.grupo_nome %></td>
+            <td><%= ag.turma_nome %></td>
             <td>
               <div class="action-buttons">
-                <button onclick="location.href='/aluno-grupo/editar/<%= ag.id %>'">Editar</button>
-                <button class="delete-button" onclick="alunoGrupoApi.excluir('<%= ag.id %>')">Excluir</button>
+                <button onclick="location.href='/aluno-grupo/editar/<%= ag.aluno_grupo_id %>'">Editar</button>
+                <button class="delete-button" onclick="api.alunoGrupo.excluir('<%= ag.aluno_grupo_id %>')">Excluir</button>
               </div>
             </td>
           </tr>
         <% }) %>
       <% } else { %>
-        <tr><td colspan="4">Nenhuma relação aluno-grupo encontrada</td></tr>
+        <tr><td colspan="5">Nenhuma relação aluno-grupo encontrada</td></tr>
       <% } %>
     </tbody>
   </table>

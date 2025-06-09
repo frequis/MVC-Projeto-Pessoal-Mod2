@@ -8,6 +8,10 @@ const salasController = require('../controllers/salasController');
 const reservasController = require('../controllers/reservasController');
 const alunoGrupoController = require('../controllers/aluno_grupoController');
 
+// Middleware to parse JSON bodies
+router.use(express.json());
+router.use(express.urlencoded({ extended: true }));
+
 // Rota principal
 router.get('/', async (req, res) => {
     try {
@@ -54,8 +58,7 @@ router.get('/turmas/:id', turmaController.getTurmaById);
 router.get('/turmas', turmaController.getAllTurmas);
 router.post('/turmas', async (req, res) => {
     try {
-        const result = await turmaController.createTurma(req.body);
-        res.status(201).json(result);
+        await turmaController.createTurma(req, res);
     } catch (error) {
         console.error('Erro ao criar turma:', error);
         res.status(500).json({ error: error.message });
@@ -70,15 +73,7 @@ router.put('/turmas/:id', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-router.delete('/turmas/:id', async (req, res) => {
-    try {
-        await turmaController.deleteTurma(req.params.id);
-        res.status(204).send();
-    } catch (error) {
-        console.error('Erro ao deletar turma:', error);
-        res.status(500).json({ error: error.message });
-    }
-});
+router.delete('/turmas/:id', turmaController.deleteTurma);
 
 // Rotas para Alunos
 router.get('/alunos/novo', async (req, res) => {
@@ -104,6 +99,14 @@ router.get('/alunos/:id', alunoController.getAlunoById);
 router.get('/alunos', alunoController.getAllAlunos);
 router.post('/alunos', async (req, res) => {
     try {
+        const { aluno_nome, turma_nome } = req.body;
+        
+        if (!aluno_nome || !turma_nome) {
+            return res.status(400).json({ 
+                error: 'Nome do aluno e turma são obrigatórios' 
+            });
+        }
+
         const result = await alunoController.createAluno(req.body);
         res.status(201).json(result);
     } catch (error) {
@@ -113,6 +116,14 @@ router.post('/alunos', async (req, res) => {
 });
 router.put('/alunos/:id', async (req, res) => {
     try {
+        const { aluno_nome, turma_nome } = req.body;
+        
+        if (!aluno_nome || !turma_nome) {
+            return res.status(400).json({ 
+                error: 'Nome do aluno e turma são obrigatórios' 
+            });
+        }
+
         const result = await alunoController.updateAluno(req.params.id, req.body);
         res.status(200).json(result);
     } catch (error) {
@@ -120,15 +131,7 @@ router.put('/alunos/:id', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-router.delete('/alunos/:id', async (req, res) => {
-    try {
-        await alunoController.deleteAluno(req.params.id);
-        res.status(204).send();
-    } catch (error) {
-        console.error('Erro ao deletar aluno:', error);
-        res.status(500).json({ error: error.message });
-    }
-});
+router.delete('/alunos/:id', alunoController.deleteAluno);
 
 // Rotas para Grupos
 router.get('/grupos/novo', (req, res) => {
@@ -152,7 +155,15 @@ router.get('/grupos/:id', grupoController.getGrupoById);
 router.get('/grupos', grupoController.getAllGrupos);
 router.post('/grupos', async (req, res) => {
     try {
-        const result = await grupoController.createGrupo(req.body);
+        const { grupo_nome, quantidade } = req.body;
+        
+        if (!grupo_nome || !quantidade) {
+            return res.status(400).json({ 
+                error: 'Nome do grupo e quantidade são obrigatórios' 
+            });
+        }
+
+        const result = await grupoController.createGrupo(grupo_nome, quantidade);
         res.status(201).json(result);
     } catch (error) {
         console.error('Erro ao criar grupo:', error);
@@ -172,7 +183,15 @@ router.get('/salas/:id', salasController.getSalaById);
 router.get('/salas', salasController.getAllSalas);
 router.post('/salas', async (req, res) => {
     try {
-        const result = await salasController.createSala(req.body);
+        const { sala_nome, capacidade } = req.body;
+        
+        if (!sala_nome || !capacidade) {
+            return res.status(400).json({ 
+                error: 'Nome da sala e capacidade são obrigatórios' 
+            });
+        }
+
+        const result = await salasController.createSala(sala_nome, capacidade);
         res.status(201).json(result);
     } catch (error) {
         console.error('Erro ao criar sala:', error);
@@ -203,7 +222,22 @@ router.get('/reservas/:id', reservasController.getReservaById);
 router.get('/reservas', reservasController.getAllReservas);
 router.post('/reservas', async (req, res) => {
     try {
-        const result = await reservasController.createReserva(req.body);
+        const { sala_nome, aluno_nome, grupo_nome, começo, fim } = req.body;
+        
+        if (!sala_nome || !aluno_nome || !grupo_nome || !começo || !fim) {
+            return res.status(400).json({ 
+                error: 'Todos os campos são obrigatórios para a reserva' 
+            });
+        }
+
+        const result = await reservasController.createReserva(
+            sala_nome, 
+            aluno_nome, 
+            grupo_nome, 
+            new Date(), // data atual para o campo reservado
+            new Date(começo), 
+            new Date(fim)
+        );
         res.status(201).json(result);
     } catch (error) {
         console.error('Erro ao criar reserva:', error);
@@ -229,11 +263,19 @@ router.get('/aluno-grupo/:id', alunoGrupoController.getAlunoGrupoById);
 router.get('/aluno-grupo', alunoGrupoController.getAllAlunoGrupos);
 router.post('/aluno-grupo', async (req, res) => {
     try {
-        const result = await alunoGrupoController.createAlunoGrupo(req.body);
-        res.status(201).json(result);
+        const { aluno_nome, grupo_nome } = req.body;
+        
+        if (!aluno_nome || !grupo_nome) {
+            return res.status(400).json({ 
+                error: 'Nome do aluno e nome do grupo são obrigatórios' 
+            });
+        }
+
+        const result = await alunoGrupoController.createAlunoGrupo(aluno_nome, grupo_nome);
+        return res.status(201).json(result);
     } catch (error) {
         console.error('Erro ao criar relação aluno-grupo:', error);
-        res.status(500).json({ error: error.message });
+        return res.status(500).json({ error: error.message });
     }
 });
 router.put('/aluno-grupo/:id', alunoGrupoController.updateAlunoGrupo);
