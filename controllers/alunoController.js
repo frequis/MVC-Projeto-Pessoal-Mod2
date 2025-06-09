@@ -20,14 +20,17 @@ const getAlunoById = async (req, res) => {
   }
 };
 
-const createAluno = async (req, res) => {
-  try {
-    const { nome, id_turma } = req.body;
-    const novoAluno = await alunoModel.create(nome, id_turma);
-    res.status(201).json(novoAluno);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+const createAluno = async (aluno_nome, turma_nome) => {
+    try {
+        if (!aluno_nome || !turma_nome) {
+            throw new Error('Nome do aluno e turma são obrigatórios');
+        }
+
+        const novoAluno = await alunoModel.create(aluno_nome, turma_nome);
+        return novoAluno;
+    } catch (error) {
+        throw error;
+    }
 };
 
 const updateAluno = async (req, res) => {

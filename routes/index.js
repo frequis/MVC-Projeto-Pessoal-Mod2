@@ -107,11 +107,11 @@ router.post('/alunos', async (req, res) => {
             });
         }
 
-        const result = await alunoController.createAluno(req.body);
-        res.status(201).json(result);
+        const result = await alunoController.createAluno(aluno_nome, turma_nome);
+        return res.status(201).json(result);
     } catch (error) {
         console.error('Erro ao criar aluno:', error);
-        res.status(500).json({ error: error.message });
+        return res.status(500).json({ error: error.message });
     }
 });
 router.put('/alunos/:id', async (req, res) => {
@@ -164,10 +164,10 @@ router.post('/grupos', async (req, res) => {
         }
 
         const result = await grupoController.createGrupo(grupo_nome, quantidade);
-        res.status(201).json(result);
+        return res.status(201).json(result);
     } catch (error) {
         console.error('Erro ao criar grupo:', error);
-        res.status(500).json({ error: error.message });
+        return res.status(500).json({ error: error.message });
     }
 });
 router.put('/grupos/:id', grupoController.updateGrupo);

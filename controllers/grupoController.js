@@ -28,13 +28,16 @@ const getGrupoById = async (req, res) => {
     }
 };
 
-const createGrupo = async (req, res) => {
+const createGrupo = async (grupo_nome, quantidade) => {
     try {
-        const { grupo_nome, quantidade } = req.body;
+        if (!grupo_nome || !quantidade) {
+            throw new Error('Nome do grupo e quantidade são obrigatórios');
+        }
+
         const novoGrupo = await grupoModel.create(grupo_nome, quantidade);
-        res.status(201).json(novoGrupo);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+        return novoGrupo;
+    } catch (error) {
+        throw error;
     }
 };
 

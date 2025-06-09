@@ -25,11 +25,11 @@ const getById = async (id) => {
 };
 
 const create = async (grupo_nome, quantidade) => {
-  const result = await db.query(
-    'INSERT INTO grupo (grupo_nome, quantidade) VALUES ($1, $2) RETURNING *',
-    [grupo_nome, quantidade]
-  );
-  return result.rows[0];
+    const result = await db.query(
+        'INSERT INTO grupo (grupo_nome, quantidade) VALUES ($1, $2) RETURNING *',
+        [grupo_nome, quantidade]
+    );
+    return result.rows[0];
 };
 
 const update = async (id, grupo_nome, quantidade) => {
