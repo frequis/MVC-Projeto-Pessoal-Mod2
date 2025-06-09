@@ -192,10 +192,10 @@ router.post('/salas', async (req, res) => {
         }
 
         const result = await salasController.createSala(sala_nome, capacidade);
-        res.status(201).json(result);
+        return res.status(201).json(result);
     } catch (error) {
         console.error('Erro ao criar sala:', error);
-        res.status(500).json({ error: error.message });
+        return res.status(500).json({ error: error.message });
     }
 });
 router.put('/salas/:id', salasController.updateSala);
@@ -205,8 +205,14 @@ router.delete('/salas/:id', salasController.deleteSala);
 router.get('/reservas/novo', async (req, res) => {
     try {
         const salas = await salasController.getAllSalas();
+        const alunos = await alunoController.getAllAlunos();
         const grupos = await grupoController.getAllGrupos();
-        res.render('pages/reserva/novo', { salas, grupos });
+        
+        res.render('pages/reserva/novo', { 
+            salas: salas || [], 
+            alunos: alunos || [],
+            grupos: grupos || []
+        });
     } catch (error) {
         console.error('Erro ao carregar formulário:', error);
         res.status(500).render('error', { error: 'Erro ao carregar formulário' });
@@ -224,24 +230,18 @@ router.post('/reservas', async (req, res) => {
     try {
         const { sala_nome, aluno_nome, grupo_nome, começo, fim } = req.body;
         
-        if (!sala_nome || !aluno_nome || !grupo_nome || !começo || !fim) {
-            return res.status(400).json({ 
-                error: 'Todos os campos são obrigatórios para a reserva' 
-            });
-        }
-
         const result = await reservasController.createReserva(
-            sala_nome, 
-            aluno_nome, 
-            grupo_nome, 
-            new Date(), // data atual para o campo reservado
-            new Date(começo), 
-            new Date(fim)
+            sala_nome,
+            aluno_nome,
+            grupo_nome,
+            começo,
+            fim
         );
-        res.status(201).json(result);
+        
+        return res.status(201).json(result);
     } catch (error) {
         console.error('Erro ao criar reserva:', error);
-        res.status(500).json({ error: error.message });
+        return res.status(500).json({ error: error.message });
     }
 });
 router.put('/reservas/:id', reservasController.updateReserva);

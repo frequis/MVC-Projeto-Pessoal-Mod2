@@ -1,18 +1,5 @@
 const reservasModel = require('../models/reservasModel');
 
-// Helper function to validate request body
-const validateReservaBody = (body) => {
-    const { sala_nome, aluno_nome, grupo_nome, começo, fim } = body;
-    
-    if (!sala_nome) throw new Error('Nome da sala é obrigatório');
-    if (!aluno_nome) throw new Error('Nome do aluno é obrigatório');
-    if (!grupo_nome) throw new Error('Nome do grupo é obrigatório');
-    if (!começo) throw new Error('Horário de início é obrigatório');
-    if (!fim) throw new Error('Horário de fim é obrigatório');
-    
-    return true;
-};
-
 const getAllReservas = async (req, res) => {
     try {
         const reservas = await reservasModel.getAll();
@@ -41,61 +28,57 @@ const getReservaById = async (req, res) => {
     }
 };
 
-const createReserva = async (req, res) => {
+const createReserva = async (sala_nome, aluno_nome, grupo_nome, começo, fim) => {
     try {
-        // Validate request body
-        validateReservaBody(req.body);
-        
-        const { sala_nome, aluno_nome, grupo_nome, reservado, começo, fim } = req.body;
-        
+        // Validate required fields
+        if (!sala_nome || !aluno_nome || !grupo_nome || !começo || !fim) {
+            throw new Error('Todos os campos são obrigatórios');
+        }
+
+        // Validate dates
+        const startDate = new Date(começo);
+        const endDate = new Date(fim);
+
+        if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+            throw new Error('Datas inválidas');
+        }
+
+        if (startDate >= endDate) {
+            throw new Error('A data de início deve ser anterior à data de fim');
+        }
+
         const novaReserva = await reservasModel.create(
-            sala_nome, 
-            aluno_nome, 
-            grupo_nome, 
-            reservado || new Date(), 
-            começo, 
+            sala_nome,
+            aluno_nome,
+            grupo_nome,
+            começo,
             fim
         );
-        
-        res.status(201).json(novaReserva);
-    } catch (err) {
-        console.error('Error creating reserva:', err);
-        res.status(400).json({ 
-            error: true,
-            message: err.message 
-        });
+        return novaReserva;
+    } catch (error) {
+        throw error;
     }
 };
 
 const updateReserva = async (req, res) => {
     try {
-        // Validate request body
-        validateReservaBody(req.body);
-        
         const { sala_nome, aluno_nome, grupo_nome, reservado, começo, fim } = req.body;
-        
         const reservaAtualizada = await reservasModel.update(
-            req.params.id,
-            sala_nome,
-            aluno_nome,
-            grupo_nome,
-            reservado,
-            começo,
+            req.params.id, 
+            sala_nome, 
+            aluno_nome, 
+            grupo_nome, 
+            reservado, 
+            começo, 
             fim
         );
-        
         if (!reservaAtualizada) {
             res.status(404).json({ message: 'Reserva não encontrada' });
             return;
         }
-        
         res.status(200).json(reservaAtualizada);
     } catch (err) {
-        console.error('Error updating reserva:', err);
-        res.status(400).json({ 
-            error: true,
-            message: err.message 
-        });
+        res.status(500).json({ error: err.message });
     }
 };
 

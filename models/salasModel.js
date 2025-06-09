@@ -24,34 +24,25 @@ const getById = async (id) => {
   return result.rows[0];
 };
 
-const create = async (capacidade, sala_nome) => {
-  const result = await db.query(
-    'INSERT INTO sala (capacidade, sala_nome) VALUES ($1, $2) RETURNING *',
-    [capacidade, sala_nome]
-  );
-  return result.rows[0];
-};
-
-const update = async (id, capacidade, sala_nome) => {
-  const result = await db.query(
-    'UPDATE sala SET capacidade = $1, sala_nome = $2 WHERE sala_id = $3 RETURNING *',
-    [capacidade, sala_nome, id]
-  );
-  return result.rows[0];
+const create = async (sala_nome, capacidade) => {
+    const result = await db.query(
+        'INSERT INTO sala (sala_nome, capacidade) VALUES ($1, $2) RETURNING *',
+        [sala_nome, capacidade]
+    );
+    return result.rows[0];
 };
 
 const remove = async (id) => {
-  const result = await db.query(
-    'DELETE FROM sala WHERE sala_id = $1 RETURNING *',
-    [id]
-  );
-  return result.rows[0];
+    const result = await db.query(
+        'DELETE FROM sala WHERE sala_id = $1 RETURNING *',
+        [id]
+    );
+    return result.rows[0];
 };
 
 module.exports = {
   getAll,
   getById,
   create,
-  update,
   remove
 };

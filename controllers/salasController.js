@@ -28,13 +28,16 @@ const getSalaById = async (req, res) => {
     }
 };
 
-const createSala = async (req, res) => {
+const createSala = async (sala_nome, capacidade) => {
     try {
-        const { capacidade, sala_nome } = req.body;
-        const novaSala = await salasModel.create(capacidade, sala_nome);
-        res.status(201).json(novaSala);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+        if (!sala_nome || !capacidade) {
+            throw new Error('Nome da sala e capacidade são obrigatórios');
+        }
+
+        const novaSala = await salasModel.create(sala_nome, capacidade);
+        return novaSala;
+    } catch (error) {
+        throw error;
     }
 };
 

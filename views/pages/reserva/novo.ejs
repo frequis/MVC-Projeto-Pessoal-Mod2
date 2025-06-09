@@ -3,55 +3,77 @@
 <head>
     <title>Nova Reserva</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
-    <script src="/js/script.js" defer></script>
 </head>
 <body>
     <h1>Adicionar Nova Reserva</h1>
-    <form id="formReserva" onsubmit="event.preventDefault(); handleSubmit();">
+    <form id="formReserva">
         <div>
-            <label for="sala">Sala:</label>
-            <select id="sala" name="sala" required>
+            <label for="sala_nome">Sala:</label>
+            <select id="sala_nome" name="sala_nome" required>
                 <% salas.forEach(sala => { %>
-                    <option value="<%= sala.id %>"><%= sala.nome %> (Cap: <%= sala.capacidade %>)</option>
+                    <option value="<%= sala.sala_nome %>"><%= sala.sala_nome %></option>
                 <% }); %>
             </select>
         </div>
         <div>
-            <label for="grupo">Grupo:</label>
-            <select id="grupo" name="grupo" required>
+            <label for="aluno_nome">Aluno:</label>
+            <select id="aluno_nome" name="aluno_nome" required>
+                <% alunos.forEach(aluno => { %>
+                    <option value="<%= aluno.aluno_nome %>"><%= aluno.aluno_nome %></option>
+                <% }); %>
+            </select>
+        </div>
+        <div>
+            <label for="grupo_nome">Grupo:</label>
+            <select id="grupo_nome" name="grupo_nome" required>
                 <% grupos.forEach(grupo => { %>
-                    <option value="<%= grupo.id %>"><%= grupo.nome %></option>
+                    <option value="<%= grupo.grupo_nome %>"><%= grupo.grupo_nome %></option>
                 <% }); %>
             </select>
         </div>
         <div>
-            <label for="inicio">Início:</label>
-            <input type="datetime-local" id="inicio" name="inicio" required>
+            <label for="começo">Data/Hora Início:</label>
+            <input type="datetime-local" id="começo" name="começo" required>
         </div>
         <div>
-            <label for="fim">Fim:</label>
+            <label for="fim">Data/Hora Fim:</label>
             <input type="datetime-local" id="fim" name="fim" required>
         </div>
-        <button type="submit">Salvar</button>
+        <button type="submit">Criar Reserva</button>
         <a href="/" class="button">Cancelar</a>
     </form>
 
     <script>
-        async function handleSubmit() {
-            const data = {
-                sala_id: document.getElementById('sala').value,
-                grupo_id: document.getElementById('grupo').value,
-                inicio: document.getElementById('inicio').value,
+        document.getElementById('formReserva').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                sala_nome: document.getElementById('sala_nome').value,
+                aluno_nome: document.getElementById('aluno_nome').value,
+                grupo_nome: document.getElementById('grupo_nome').value,
+                começo: document.getElementById('começo').value,
                 fim: document.getElementById('fim').value
             };
+
             try {
-                await reservaApi.criar(data);
+                const response = await fetch('/reservas', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Erro ao criar reserva');
+                }
+
                 window.location.href = '/';
             } catch (error) {
-                console.error('Erro:', error);
-                alert('Erro ao criar reserva');
+                alert(error.message);
             }
-        }
+        });
     </script>
 </body>
 </html>
