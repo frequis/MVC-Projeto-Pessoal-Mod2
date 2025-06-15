@@ -176,18 +176,20 @@ O sistema possui os seguintes endpoints organizados por entidade:
 
 ### 3.1 Demonstração do Sistema Web (Semana 8)
 
-*VIDEO: Insira o link do vídeo demonstrativo nesta seção*
-*Descreva e ilustre aqui o desenvolvimento do sistema web completo, explicando brevemente o que foi entregue em termos de código e sistema. Utilize prints de tela para ilustrar.*
+[Assista ao vídeo explicando o projeto](https://youtu.be/p6p8h5mUxbY)
 
 ### 3.2 Conclusões e Trabalhos Futuros (Semana 8)
 
-*Indique pontos fortes e pontos a melhorar de maneira geral.*
-*Relacione também quaisquer outras ideias que você tenha para melhorias futuras.*
+O resultado do projeto cumpre seu propósito de ser intuitivo e adaptável para qualquer um. O produto foi pensado para que o usuário final, o administrador do sistema, faça reservas com rapidez e não tenha dificuldade para entender cada elemento da página.
 
-
+No futuro, poderão ser adotadas outras abordagens de design gráfico que estejam em conformidade com o guia de estilo específico do cliente. Caso necessário podem ser adicionadas novas tabelas.
 
 ## <a name="c4"></a>4. Referências
 
-_Incluir as principais referências de seu projeto, para que seu parceiro possa consultar caso ele se interessar em aprofundar. Um exemplo de referência de livro e de site:_<br>
+Google Forms. Disponível em: <https://docs.google.com/forms>.
+
+‌GitHub - afonsolelis/mvc-boilerplate. Disponível em: <https://github.com/afonsolelis/mvc-boilerplate>.‌
+
+‌Supabase. Disponível em: <https://supabase.com>.
 
 ---
